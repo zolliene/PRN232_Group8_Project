@@ -1,0 +1,144 @@
+﻿@page
+@model FE_RazorPage.Pages.Login.LoginModelPage
+@using FE_RazorPage.Models
+
+@{
+    ViewData["Title"] = "Sign In";
+    Layout = null;
+}
+
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        background: #fafbfc;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: Arial, sans-serif;
+    }
+
+    .login-title {
+        text-align: center;
+        margin-bottom: 1.5rem;
+        font-size: 2.2rem;
+        font-weight: 800;
+        color: #1976d2; /* Màu xanh đẹp, bạn có thể thay bằng màu khác */
+        letter-spacing: 2px;
+    }
+
+    .login-form-simple {
+        background: #fff;
+        padding: 2.2rem 1.3rem 1.1rem 1.3rem;
+        border-radius: 1.1rem;
+        box-shadow: 0 2px 12px 0 rgba(0,0,0,0.09);
+        min-width: 260px;
+        width: 100%;
+        max-width: 320px;
+    }
+
+        .login-form-simple h2 {
+            margin-bottom: 1.3rem;
+            font-size: 2rem;
+            font-weight: 600;
+            text-align: center;
+            color: #222;
+        }
+
+        .login-form-simple label {
+            font-size: 0.99rem;
+            color: #222;
+            margin-bottom: 0.38rem;
+            display: block;
+            font-weight: 500;
+        }
+
+        .login-form-simple input {
+            width: 100%;
+            padding: 0.59rem;
+            margin-bottom: 1.05rem;
+            border: 1.3px solid #dadada;
+            border-radius: 0.39rem;
+            font-size: 0.97rem;
+            background: #f7f7f7;
+            transition: border 0.18s;
+            margin-top: 0.13rem;
+        }
+
+            .login-form-simple input:focus {
+                border-color: #1976d2;
+                outline: none;
+            }
+
+        /* Cài đặt chung cho button và a (nút) - nhỏ gọn */
+        .login-form-simple .action-btn {
+            display: block;
+            width: 100%;
+            padding: 0.45rem;
+            border-radius: 0.45rem;
+            font-size: 0.95rem;
+            font-weight: 700;
+            text-align: center;
+            letter-spacing: 0.2px;
+            margin-bottom: 1rem; 
+            transition: background 0.18s, color 0.18s, border 0.18s;
+            box-sizing: border-box;
+            cursor: pointer;
+            border-width: 2px;
+            border-style: solid;
+        }
+        /* Nút Sign In - xanh */
+        .login-form-simple button.action-btn {
+            background: #1976d2;
+            color: #fff;
+            border-color: #1976d2;
+             margin-bottom: 0.5rem; 
+             margin-top: 0.5rem; 
+        }
+
+            .login-form-simple button.action-btn:hover {
+                background: #1253a4;
+                border-color: #1253a4;
+            }
+        /* Nút Register - border xanh, nền trắng */
+        .login-form-simple .register-btn {
+            background: #fff;
+            color: #1976d2;
+            border-color: #1976d2;
+            text-decoration: none;
+             margin-bottom: 0.08rem; 
+        }
+
+            .login-form-simple .register-btn:hover {
+                background: #e3f0fc;
+                color: #0d47a1;
+                border-color: #1565c0;
+                text-decoration: none;
+            }
+
+    .error-message {
+        color: #e53935;
+        text-align: center;
+        margin-bottom: 0.7rem;
+        font-size: 0.5rem;
+    }
+</style>
+
+<form method="post" class="login-form-simple">
+    <h1 class="login-title">ADV CLINIC</h1>
+    @if (Model.ErrorMessage != null)
+    {
+        <div class="error-message">@Model.ErrorMessage</div>
+    }
+    <div>
+        <label for="email">Email</label>
+        <input asp-for="Input.Email" id="email" placeholder="Email" />
+    </div>
+    <div>
+        <label for="password">Password</label>
+        <input class="m-4 mt-12" asp-for="Input.Password" id="password" type="password" placeholder="Password" />
+    </div>
+    <button type="submit" class="action-btn">Sign In</button>
+    <a class="action-btn register-btn" href="/Register">Register a new account</a>
+</form>

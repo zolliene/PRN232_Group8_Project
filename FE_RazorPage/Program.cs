@@ -1,7 +1,9 @@
-var builder = WebApplication.CreateBuilder(args);
+﻿var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
+builder.Services.AddSession();
+
 
 var app = builder.Build();
 
@@ -17,9 +19,27 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+app.UseSession();
 
 app.UseAuthorization();
 
 app.MapRazorPages();
+//app.Use(async (context, next) =>
+//{
+//    // Kiểm tra nếu request là "/" hoặc "/Index"
+//    if ((context.Request.Path == "/" || context.Request.Path == "/Index"))
+//    {
+//        // Kiểm tra session đã có jwtToken chưa
+//        var hasToken = context.Session.GetString("jwtToken");
+//        if (string.IsNullOrEmpty(hasToken))
+//        {
+//            // Nếu CHƯA đăng nhập thì redirect login
+//            context.Response.Redirect("/Index");
+//            return;
+//        }
+//    }
+//    await next();
+//});
+
 
 app.Run();

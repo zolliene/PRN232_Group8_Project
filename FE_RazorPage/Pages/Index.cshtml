@@ -1,10 +1,159 @@
-﻿@page
+﻿
+
+@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "ADV Clinic – Chăm sóc sức khỏe HIV toàn diện";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<style>
+    body {
+        font-family: 'Segoe UI', sans-serif;
+        background-color: #f4f6f9;
+        margin: 0;
+        padding: 0;
+    }
+
+    /* Full width hero + contact */
+    .hero, .contact {
+        width: 100vw;
+        margin-left: calc(-50vw + 50%);
+    }
+
+    .hero {
+        background-color: #e0e7ff;
+        background-size: cover;
+        padding: 80px 20px;
+        text-align: center;
+        color: #333;
+        margin-top: -1.3rem;
+    }
+
+        .hero h1 {
+            font-size: 3.8em;
+            font-weight: 700;
+            color: #1e3a8a; /* xanh đậm */
+            margin-bottom: 25px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .hero p {
+            font-size: 1.25em;
+            line-height: 1.6;
+            color: #333;
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 0 10px;
+            font-weight: 400;
+        }
+
+        .hero h1 {
+            transition: transform 0.3s ease;
+        }
+
+            .hero h1:hover {
+                transform: scale(1.03);
+            }
+
+
+    .section {
+        padding: 60px 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+        .section h2 {
+            text-align: center;
+            margin-bottom: 40px;
+            color: #333;
+        }
+
+    .services {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 20px;
+    }
+
+    .service {
+        background-color: #fff;
+        padding: 20px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        border-radius: 8px;
+        text-align: center;
+        transition: transform 0.2s ease;
+    }
+
+        .service:hover {
+            transform: translateY(-4px);
+        }
+
+        .service img {
+            max-width: 80px;
+            margin-bottom: 15px;
+        }
+
+    .contact {
+        background-color: #e0e7ff;
+        padding: 40px 20px;
+        text-align: center;
+    }
+
+        .contact h2 {
+            margin-bottom: 20px;
+        }
+
+        .contact p {
+            margin: 5px 0;
+        }
+
+    footer {
+        background-color: #1e3a8a;
+        color: #fff;
+        text-align: center;
+        padding: 20px;
+    }
+</style>
+
+<div class="hero">
+    <h1>ADV Clinic</h1>
+    <p>Phòng khám chuyên điều trị và chăm sóc bệnh nhân HIV với đội ngũ y bác sĩ tận tâm và chuyên nghiệp.</p>
 </div>
+
+<div class="section">
+    @* <h2>Dịch vụ của chúng tôi</h2> *@
+    <div class="services">
+        <div class="service">
+            <img src="images/healthcare.png" alt="Tư vấn HIV">
+            <h3>Tư vấn HIV</h3>
+            <p>Hỗ trợ tư vấn miễn phí, bảo mật và chuyên nghiệp cho mọi đối tượng.</p>
+        </div>
+        <div class="service">
+            <img src="images/test-tube.png" alt="Xét nghiệm nhanh">
+            <h3>Xét nghiệm nhanh</h3>
+            <p>Thực hiện xét nghiệm HIV nhanh chóng, chính xác và an toàn.</p>
+        </div>
+        <div class="service">
+            <img src="images/hospital-bed.png" alt="Điều trị ARV">
+            <h3>Điều trị ARV</h3>
+            <p>Phác đồ điều trị ARV hiệu quả, giúp bệnh nhân sống khỏe mạnh.</p>
+        </div>
+        <div class="service">
+            <img src="images/hiv-aids.png" alt="Hỗ trợ tâm lý">
+            <h3>Hỗ trợ tâm lý</h3>
+            <p>Đồng hành cùng bệnh nhân trong quá trình điều trị và hòa nhập cộng đồng.</p>
+        </div>
+    </div>
+</div>
+
+<div class="contact">
+    <h2>Liên hệ với chúng tôi</h2>
+    <p><strong>Địa chỉ:</strong> 123, Quận 1, TP. HCM</p>
+    <p><strong>Điện thoại:</strong> 0901 234 567</p>
+    <p><strong>Email:</strong> advclinic@gmail.com</p>
+    <p><strong>Giờ làm việc:</strong> Thứ 2 - Thứ 7, 8:00 - 18:00</p>
+</div>
+
+ <footer>
+    &copy; 2025 ADV Clinic. All rights reserved.
+</footer>
+ 
