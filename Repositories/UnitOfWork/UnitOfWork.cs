@@ -46,6 +46,20 @@ namespace Repositories.UnitOfWork
         public int Save() => _context.SaveChanges();
 
         public async Task<int> SaveAsync() => await _context.SaveChangesAsync();
+        public async Task BeginTransactionAsync()
+        {
+            await _context.Database.BeginTransactionAsync();
+        }
+
+        public async Task CommitTransactionAsync()
+        {
+           await _context.Database.CommitTransactionAsync();
+        }
+
+        public async Task RollbackTransactionAsync()
+        {
+            await _context.Database.RollbackTransactionAsync();
+        }
 
         // IDisposable
         private bool disposed = false;
