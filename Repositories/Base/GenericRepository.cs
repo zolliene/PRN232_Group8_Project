@@ -151,5 +151,18 @@ namespace PlanyApp.Repository.Base
         {
             return _dbSet.FirstOrDefault(filter);
         }
+        
+        
+        public virtual async Task<IList<TEntity>> GetAllAsync(Expression<Func<IQueryable<TEntity>, IQueryable<TEntity>>>? include)
+        {
+            IQueryable<TEntity> query = _dbSet;
+
+            if (include != null)
+            {
+                query = include.Compile()(query);
+            }
+
+            return await query.ToListAsync();
+        }
     }
 }

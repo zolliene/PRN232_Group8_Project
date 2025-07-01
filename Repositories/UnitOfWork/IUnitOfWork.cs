@@ -25,5 +25,9 @@ namespace Repositories.UnitOfWork
 
         int Save();
         Task<int> SaveAsync();
+        Task BeginTransactionAsync();
+        Task CommitTransactionAsync();
+        Task RollbackTransactionAsync();
+
     }
 }
