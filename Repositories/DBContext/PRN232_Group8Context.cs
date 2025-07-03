@@ -10,6 +10,7 @@ namespace Repositories.Models;
 
 public partial class PRN232_Group8Context : DbContext
 {
+    public PRN232_Group8Context(){}
     public PRN232_Group8Context(DbContextOptions<PRN232_Group8Context> options)
         : base(options)
     {
