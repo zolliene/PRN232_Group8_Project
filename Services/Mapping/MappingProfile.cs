@@ -23,5 +23,7 @@ public class MappingProfile : Profile
 
         CreateMap<TestType, GetTestTypeRes>();
 
+        CreateMap<CreateLabTestReq, LabTest>();
+
     }
 }
