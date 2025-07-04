@@ -1,3 +1,4 @@
+using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using Services.Dto.response;
 using Services.Interfaces;
@@ -30,5 +31,21 @@ public class AppointmentController : BaseController
             return HandleException(e, nameof(AppointmentController));
         }
     }
+
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateAppointment([FromRoute] int id)
+    {
+        try
+        {
+            await _appointmentService.UpdateAppointment(id);
+            return NoContent();
+        }
+        catch (Exception e)
+        {
+            return HandleException(e, nameof(AppointmentController));
+        }
+    }
+    
     
 }
