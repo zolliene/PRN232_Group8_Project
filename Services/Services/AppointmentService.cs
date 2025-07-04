@@ -89,10 +89,6 @@ public class AppointmentService : IAppointmentService
             _logger.LogError("Error at handle update appointment cause by {}", e.Message);
             throw;
         }
-        finally
-        {
-            _unitOfWork.Dispose();
-        }
     }
 
     public async Task<GetPatientDetail> GetAppointmentById(int appointmentId)
@@ -112,10 +108,6 @@ public class AppointmentService : IAppointmentService
         {
             _logger.LogError("Error at get appointment by id cause by {}", e.Message);
             throw;
-        }
-        finally
-        {
-            _unitOfWork.Dispose();
         }
     }
 }

@@ -1,5 +1,6 @@
 using AutoMapper;
 using Repositories.Models;
+using Services.Dto.request;
 using Services.Dto.response;
 
 namespace Services.Mapping;
@@ -17,6 +18,8 @@ public class MappingProfile : Profile
         CreateMap<Patient, GetPatientDetail>()
             .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.FirstName + " " + src.LastName))
             ;
-        
+
+        CreateMap<CreateExaminationReq, Examination>();
+
     }
 }
