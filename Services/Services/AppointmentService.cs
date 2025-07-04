@@ -3,6 +3,8 @@ using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using PlanyApp.Repository.Base;
+using Repositories.Models;
 using Repositories.UnitOfWork;
 using Services.Dto.response;
 using Services.Interfaces;
@@ -14,7 +16,7 @@ public class AppointmentService : IAppointmentService
     private readonly IMapper _mapper;
     private readonly ILogger<AppointmentService> _logger;
     private readonly IHttpContextAccessor _httpContextAccessor;
-
+    private readonly GenericRepository<Appointment> _appointmentRepository;
     
     public AppointmentService(IUnitOfWork unitOfWork, IMapper mapper, 
         ILogger<AppointmentService> logger, IHttpContextAccessor httpContextAccessor)
@@ -23,6 +25,7 @@ public class AppointmentService : IAppointmentService
         _mapper = mapper;
         _logger = logger;
         _httpContextAccessor = httpContextAccessor;
+        _appointmentRepository = _unitOfWork.AppointmentRepository;
     }
 
     public async Task<List<GetAppointmentRes>> GetAllAppointments(DateOnly? date, string? status)
@@ -49,7 +52,7 @@ public class AppointmentService : IAppointmentService
 
             _logger.LogInformation("Get all appointments with date {} and status {}", date, status);
             var appointmentDate = date ?? DateOnly.FromDateTime(DateTime.Now);
-            var listAppointment = await _unitOfWork.AppointmentRepository.GetAllAsync(query => query
+            var listAppointment = await _appointmentRepository.GetAllAsync(query => query
                 .Include(a => a.Patient)
                 .Where(a => a.Date == appointmentDate)
                 .Where(a => string.IsNullOrWhiteSpace(finalStatus) || a.Status.ToLower() == finalStatus.ToLower())
@@ -71,13 +74,12 @@ public class AppointmentService : IAppointmentService
         {
             await _unitOfWork.BeginTransactionAsync();
             _logger.LogInformation("Update an appointment with appointmentId {}", appointmentId);
-            var appointmentRepository = _unitOfWork.AppointmentRepository;
-            var appointment = await appointmentRepository.GetByIdAsync(appointmentId);
+            var appointment = await _appointmentRepository.GetByIdAsync(appointmentId);
             if (appointment == null) throw new KeyNotFoundException("Appointment not found");
 
             appointment.Status = "checked_in";
             appointment.CheckInTime = DateTime.Now;
-            await appointmentRepository.UpdateAsync(appointment);
+            await _appointmentRepository.UpdateAsync(appointment);
             await _unitOfWork.SaveAsync();
             await _unitOfWork.CommitTransactionAsync();
         }
@@ -85,6 +87,30 @@ public class AppointmentService : IAppointmentService
         {
             await _unitOfWork.RollbackTransactionAsync();
             _logger.LogError("Error at handle update appointment cause by {}", e.Message);
+            throw;
+        }
+        finally
+        {
+            _unitOfWork.Dispose();
+        }
+    }
+
+    public async Task<GetPatientDetail> GetAppointmentById(int appointmentId)
+    {
+        try
+        {
+            _logger.LogInformation("Start get appointment with appointmentId {}", appointmentId);
+            var appointment = (await _appointmentRepository.FindIncludeAsync(
+                a => a.Id == appointmentId,
+                a => a.Patient
+            )).FirstOrDefault() ?? throw new KeyNotFoundException("Appointment not found");
+
+            return _mapper.Map<GetPatientDetail>(appointment.Patient);
+
+        }
+        catch (Exception e)
+        {
+            _logger.LogError("Error at get appointment by id cause by {}", e.Message);
             throw;
         }
         finally

@@ -8,4 +8,6 @@ public interface IAppointmentService
 
      Task UpdateAppointment(int appointmentId);
 
+     Task<GetPatientDetail> GetAppointmentById(int appointmentId);
+     
 }

@@ -50,6 +50,21 @@ public class AppointmentController : BaseController
             return HandleException(e, nameof(AppointmentController));
         }
     }
+
+    [Authorize(Roles = "doctor")]
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetAppointmentById([FromRoute] int id)
+    {
+        try
+        {
+            var response = await _appointmentService.GetAppointmentById(id);
+            return Ok(ApiResponse<GetPatientDetail>.OkResponse(response, "Patient Detail"));
+        }
+        catch (Exception e)
+        {
+            return HandleException(e, nameof(AppointmentController));
+        }
+    }
     
     
 }

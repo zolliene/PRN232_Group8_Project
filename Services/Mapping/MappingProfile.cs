@@ -10,7 +10,13 @@ public class MappingProfile : Profile
     {
         CreateMap<Appointment, GetAppointmentRes>()
             .ForMember(dest => dest.PatientName, opt => opt.MapFrom(src => src.Patient.FirstName + " " + src.Patient.LastName))
-            .ForMember(dest => dest.Phone, opt => opt.MapFrom(src => src.Patient.Phone))
+            .ForMember(dest => dest.PatientPhone, opt => opt.MapFrom(src => src.Patient.Phone))
+            .ForMember(dest => dest.PatientDob, opt => opt.MapFrom(src => src.Patient.Dob))
             ;
+
+        CreateMap<Patient, GetPatientDetail>()
+            .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.FirstName + " " + src.LastName))
+            ;
+        
     }
 }
