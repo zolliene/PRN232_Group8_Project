@@ -25,6 +25,7 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IAppointmentService, AppointmentService>();
 builder.Services.AddScoped<IExaminationService, ExaminationService>();
+builder.Services.AddScoped<ITestTypeService, TestTypeService>();
 
 builder.Services.AddHttpContextAccessor();
 

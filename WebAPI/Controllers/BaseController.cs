@@ -18,6 +18,9 @@ public abstract class BaseController : ControllerBase
             case ArgumentException _:
                 return BadRequest(ApiResponse<string>.BadRequestResponse($"Error at the {controllerName}: {ex.Message}"));
 
+            case NullReferenceException _:
+                return NotFound(ApiResponse<string>.NotFoundResponse($"Error at the {controllerName}: {ex.Message}"));
+            
             case InvalidOperationException _:
                 return StatusCode(500, ApiResponse<string>.InternalErrorResponse($"Error at the {controllerName}: {ex.Message}"));
 

@@ -21,5 +21,7 @@ public class MappingProfile : Profile
 
         CreateMap<CreateExaminationReq, Examination>();
 
+        CreateMap<TestType, GetTestTypeRes>();
+
     }
 }
