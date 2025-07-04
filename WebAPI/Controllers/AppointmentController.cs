@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Services.Dto.response;
 using Services.Interfaces;
@@ -17,11 +18,13 @@ public class AppointmentController : BaseController
         _appointmentService = appointmentService;
     }
 
+    [Authorize(Roles = "receptionist, doctor")]
     [HttpGet]
     public async Task<IActionResult> GetAppointments([FromQuery] DateOnly? date, [FromQuery] string? status)
     {
         try
         {
+            
             var response = await _appointmentService.GetAllAppointments(date, status);
             return Ok(ApiResponse<IList<GetAppointmentRes>>.OkResponse(response, "Appointment list"));
         }
@@ -30,5 +33,36 @@ public class AppointmentController : BaseController
             return HandleException(e, nameof(AppointmentController));
         }
     }
+    
+    [Authorize(Roles = "receptionist")]
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateAppointment([FromRoute] int id)
+    {
+        try
+        {
+            await _appointmentService.UpdateAppointment(id);
+            return NoContent();
+        }
+        catch (Exception e)
+        {
+            return HandleException(e, nameof(AppointmentController));
+        }
+    }
+
+    [Authorize(Roles = "doctor")]
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetAppointmentById([FromRoute] int id)
+    {
+        try
+        {
+            var response = await _appointmentService.GetAppointmentById(id);
+            return Ok(ApiResponse<GetPatientDetail>.OkResponse(response, "Patient Detail"));
+        }
+        catch (Exception e)
+        {
+            return HandleException(e, nameof(AppointmentController));
+        }
+    }
+    
     
 }

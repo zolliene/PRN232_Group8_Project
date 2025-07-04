@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
 using Repositories.Models;
 using Repositories.UnitOfWork;
@@ -23,6 +24,12 @@ builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IAppointmentService, AppointmentService>();
+builder.Services.AddScoped<IExaminationService, ExaminationService>();
+builder.Services.AddScoped<ITestTypeService, TestTypeService>();
+builder.Services.AddScoped<ILabTestService, LabTestService>();
+
+builder.Services.AddHttpContextAccessor();
+
 
 
 builder.Services.AddAuthentication(options =>
@@ -34,6 +41,7 @@ builder.Services.AddAuthentication(options =>
 {
     options.TokenValidationParameters = new TokenValidationParameters
     {
+        RoleClaimType = ClaimTypes.Role,
         ValidateIssuer = true,
         ValidateAudience = true,
         ValidateLifetime = true,
