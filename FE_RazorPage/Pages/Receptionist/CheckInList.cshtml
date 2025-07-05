@@ -368,8 +368,8 @@
 
                     @if (appointment.Status.ToLower() == "booked")
                     {
-                        <form method="post" style="display: inline;">
-                            <input type="hidden" name="appointmentId" value="@appointment.Id"/>
+                        <form method="post" asp-page-handler="CheckIn" style="display: inline;">
+                            <input type="hidden"  name="appointmentId" value="@appointment.Id"/>
                             <input type="hidden" name="action" value="checkin"/>
                             <button type="submit" class="checkin-btn"
                                     onclick="return confirm('Xác nhận check-in cho bệnh nhân @appointment.PatientName?')">
