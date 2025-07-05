@@ -1,0 +1,392 @@
+@page
+@using Microsoft.IdentityModel.Tokens
+@model FE_RazorPage.Pages.Receptionist.CheckInList
+@{
+    ViewData["Title"] = "Check In List";
+    var appointmentList = Model.Appointments;
+}
+
+<style>
+    .clinic-header {
+        background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+        padding: 40px 0;
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .clinic-title {
+        color: #1565c0;
+        font-size: 2.5rem;
+        font-weight: bold;
+        margin-bottom: 15px;
+    }
+
+    .clinic-subtitle {
+        color: #666;
+        font-size: 1.1rem;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+    }
+
+    .breadcrumb-nav {
+        color: #1565c0;
+        font-weight: 500;
+    }
+
+    .export-btn {
+        background-color: #42a5f5;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 25px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .export-btn:hover {
+        background-color: #1e88e5;
+    }
+
+    /* Search and Filter Section */
+    .search-section {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        padding: 25px;
+        margin-bottom: 30px;
+    }
+
+    .search-controls {
+        display: flex;
+        gap: 20px;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    .search-group {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .search-group label {
+        font-weight: 500;
+        color: #333;
+        font-size: 0.9rem;
+    }
+
+    .search-input {
+        padding: 10px 15px;
+        border: 2px solid #e9ecef;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: border-color 0.3s;
+        min-width: 200px;
+    }
+
+    .search-input:focus {
+        outline: none;
+        border-color: #42a5f5;
+    }
+
+    .search-btn {
+        background-color: #42a5f5;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        align-self: flex-end;
+    }
+
+    .search-btn:hover {
+        background-color: #1e88e5;
+    }
+
+    .clear-btn {
+        background-color: #6c757d;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        align-self: flex-end;
+    }
+
+    .clear-btn:hover {
+        background-color: #5a6268;
+    }
+
+    .patient-list-container {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        overflow: hidden;
+        margin-bottom: 30px;
+    }
+
+    .list-header {
+        background-color: #f8f9fa;
+        padding: 20px;
+        border-bottom: 1px solid #e9ecef;
+        font-weight: 600;
+        color: #333;
+    }
+
+    .patient-item {
+        padding: 20px;
+        border-bottom: 1px solid #e9ecef;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        transition: background-color 0.3s;
+    }
+
+    .patient-item:hover {
+        background-color: #f8f9fa;
+    }
+
+    .patient-item:last-child {
+        border-bottom: none;
+    }
+
+    .patient-info {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        flex: 1;
+    }
+
+    .patient-avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #42a5f5, #1e88e5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        font-size: 1.2rem;
+    }
+
+    .patient-details h4 {
+        margin: 0 0 5px 0;
+        color: #333;
+        font-size: 1.1rem;
+    }
+
+    .patient-meta {
+        color: #666;
+        font-size: 0.9rem;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        align-items: center;
+    }
+
+    .appointment-date {
+        color: #1565c0;
+        font-weight: 500;
+    }
+
+    .status-actions {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .status-badge {
+        padding: 6px 16px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .status-booked {
+        background-color: #fff3cd;
+        color: #856404;
+    }
+
+    .status-checked-in {
+        background-color: #d4edda;
+        color: #155724;
+    }
+
+    .status-success {
+        background-color: #d1ecf1;
+        color: #0c5460;
+    }
+
+    .session-badge {
+        background-color: #e9ecef;
+        color: #495057;
+        padding: 4px 10px;
+        border-radius: 12px;
+        font-size: 0.8rem;
+    }
+
+    .checkin-btn {
+        background-color: #28a745;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 6px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .checkin-btn:hover {
+        background-color: #218838;
+    }
+
+    .checkin-btn:disabled {
+        background-color: #6c757d;
+        cursor: not-allowed;
+    }
+
+    .contact-section {
+        background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+        padding: 40px 0;
+        text-align: center;
+        margin-top: 40px;
+    }
+
+    .contact-title {
+        color: #1565c0;
+        font-size: 1.5rem;
+        margin-bottom: 20px;
+    }
+
+    .contact-info {
+        color: #666;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .contact-info p {
+        margin: 8px 0;
+    }
+
+    .footer {
+        background-color: #1565c0;
+        color: white;
+        text-align: center;
+        padding: 20px 0;
+        margin-top: 40px;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: #666;
+    }
+
+    .empty-state i {
+        font-size: 4rem;
+        margin-bottom: 20px;
+        color: #ccc;
+    }
+    
+</style>
+
+<!-- Search Section -->
+<div class="search-section">
+    <form method="get" class="search-controls">
+        <div class="search-group">
+            <label for="appointmentDate">Ngày khám:</label>
+            <input type="date" id="appointmentDate" name="date"
+                   value="@Request.Query["date"]" class="search-input">
+        </div>
+
+        <button type="submit" class="search-btn">
+            <i class="fas fa-search"></i> Tìm kiếm
+        </button>
+
+
+    </form>
+</div>
+
+<div class="patient-list-container">
+    <div class="list-header">
+        Danh sách bệnh nhân check-in (@Model.Appointments.Count bệnh nhân)
+    </div>
+
+    @if (!appointmentList.IsNullOrEmpty())
+    {
+        @foreach (var appointment in appointmentList)
+        {
+            <div class="patient-item">
+                <div class="patient-info">
+                    <div class="patient-avatar">
+                        @appointment.PatientName.Split(' ').Last().Substring(0, 1).ToUpper()
+                    </div>
+                    <div class="patient-details">
+                        <h4>@appointment.PatientName</h4>
+                        <div class="patient-meta">
+                            <span>📞 @appointment.PatientPhone</span>
+                            <span>🎂 @appointment.PatientDob.ToString("MM/dd/yyyy")</span>
+                            <span class="appointment-date">📅 @appointment.Date.ToString("MM/dd/yyyy")</span>
+                            <span class="session-badge">@(appointment.Session == "MORNING" ? "Buổi sáng" : "Buổi chiều")</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="status-actions">
+                    <div class="status-badge status-@appointment.Status.Replace("_", "-")">
+                        @switch (appointment.Status.ToLower())
+                        {
+                            case "booked":
+                                <span>Đã đặt</span>
+                                break;
+                            case "checked_in":
+                                <span>Đã check-in</span>
+                                break;
+                            case "success":
+                                <span>Hoàn thành</span>
+                                break;
+                            default:
+                                <span>@appointment.Status</span>
+                                break;
+                        }
+                    </div>
+
+                    @if (appointment.Status.ToLower() == "booked")
+                    {
+                        <form method="post" style="display: inline;">
+                            <input type="hidden" name="appointmentId" value="@appointment.Id"/>
+                            <input type="hidden" name="action" value="checkin"/>
+                            <button type="submit" class="checkin-btn"
+                                    onclick="return confirm('Xác nhận check-in cho bệnh nhân @appointment.PatientName?')">
+                                <i class="fas fa-check"></i> Check-in
+                            </button>
+                        </form>
+                    }
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="empty-state">
+            <i class="fas fa-calendar-times"></i>
+            <h3>Chưa có bệnh nhân nào</h3>
+            <p>Danh sách check-in hiện đang trống hoặc không có kết quả phù hợp với bộ lọc.</p>
+        </div>
+    }
+</div>
