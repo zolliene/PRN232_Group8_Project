@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using System.Text.Json;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -58,8 +59,9 @@ public class AppointmentService : IAppointmentService
                 .Where(a => string.IsNullOrWhiteSpace(finalStatus) || a.Status.ToLower() == finalStatus.ToLower())
                 .Where(a => doctorId == null || a.DoctorId == doctorId)
             );
-            _logger.LogInformation("Start converting to response dto");
-            return _mapper.Map<List<GetAppointmentRes>>(listAppointment);
+            var response = _mapper.Map<List<GetAppointmentRes>>(listAppointment);
+            _logger.LogInformation("Data after converting: {}", JsonSerializer.Serialize(response));
+            return response;
         }
         catch (Exception e)
         {
