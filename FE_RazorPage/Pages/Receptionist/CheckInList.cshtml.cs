@@ -60,4 +60,28 @@ public class CheckInList : PageModel
         }
         return Page();
     }
+
+    public async Task<IActionResult> OnPostCheckInAsync(int appointmentId)
+    {
+        try
+        {
+            var http = _httpClientFactory.CreateClient("BackendApi");
+            var token = HttpContext.Session.GetString("jwtToken");
+            http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            
+            var response = await http.PutAsync($"Appointment/{appointmentId}", null);
+            var json = await response.Content.ReadAsStringAsync();
+            
+            if (response.StatusCode != HttpStatusCode.NoContent)
+            {
+                var apiResult = JsonSerializer.Deserialize<ApiResponse<string>>(json, _jsonOptions);
+                ErrorMessage = apiResult.Message;
+            }
+        }
+        catch (Exception e)
+        {
+            _logger.LogError("Error at get get list appointment async cause by {}", e.Message);
+        }
+        return RedirectToPage();
+    }
 }
