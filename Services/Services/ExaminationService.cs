@@ -34,6 +34,9 @@ public class ExaminationService : IExaminationService
         {
             _logger.LogInformation("Start handle add examination with request {}", request);
             await _unitOfWork.BeginTransactionAsync();
+            var existedExamination = await _examinationRepository.FindAsync(a => a.AppointmentId == request.AppointmentId);
+            if (existedExamination.FirstOrDefault() != null) throw new ApplicationException("Examination already exists");
+            
             var examination = _mapper.Map<Examination>(request);
             var doctorId = _httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier);
             examination.DoctorId = int.Parse(doctorId);

@@ -10,22 +10,25 @@ public abstract class BaseController : ControllerBase
         switch (ex)
         {
             case KeyNotFoundException _:
-                return NotFound(ApiResponse<string>.NotFoundResponse($"Error at the {controllerName}: {ex.Message}"));
+                return NotFound(ApiResponse<string>.NotFoundResponse($"{ex.Message}"));
 
             case UnauthorizedAccessException _:
-                return Unauthorized(ApiResponse<string>.UnauthorizedResponse($"Error at the {controllerName}: {ex.Message}"));
+                return Unauthorized(ApiResponse<string>.UnauthorizedResponse($"{ex.Message}"));
 
             case ArgumentException _:
-                return BadRequest(ApiResponse<string>.BadRequestResponse($"Error at the {controllerName}: {ex.Message}"));
+                return BadRequest(ApiResponse<string>.BadRequestResponse($"{ex.Message}"));
 
             case NullReferenceException _:
-                return NotFound(ApiResponse<string>.NotFoundResponse($"Error at the {controllerName}: {ex.Message}"));
+                return NotFound(ApiResponse<string>.NotFoundResponse($"{ex.Message}"));
+            
+            case ApplicationException _:
+                return BadRequest(ApiResponse<string>.BadRequestResponse($"{ex.Message}"));
             
             case InvalidOperationException _:
-                return StatusCode(500, ApiResponse<string>.InternalErrorResponse($"Error at the {controllerName}: {ex.Message}"));
+                return StatusCode(500, ApiResponse<string>.InternalErrorResponse($"{ex.Message}"));
 
             default:
-                return StatusCode(500, ApiResponse<string>.InternalErrorResponse($"Error at the {controllerName}: {ex.Message}"));
+                return StatusCode(500, ApiResponse<string>.InternalErrorResponse($"{ex.Message}"));
         }
     }
 }

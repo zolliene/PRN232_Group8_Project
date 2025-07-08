@@ -103,7 +103,10 @@ public class AppointmentService : IAppointmentService
                 a => a.Patient
             )).FirstOrDefault() ?? throw new KeyNotFoundException("Appointment not found");
 
-            return _mapper.Map<GetPatientDetail>(appointment.Patient);
+            var response = _mapper.Map<GetPatientDetail>(appointment.Patient);
+            response.AppointmentId = appointmentId;
+            
+            return response;
 
         }
         catch (Exception e)
