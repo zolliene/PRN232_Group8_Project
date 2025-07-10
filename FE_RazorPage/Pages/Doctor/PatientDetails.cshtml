@@ -1,0 +1,410 @@
+@page
+@model FE_RazorPage.Pages.Doctor.PatientDetails
+
+@{
+    ViewData["Title"] = "Chi tiết bệnh nhân";
+    var patient = Model.PatientDetail;
+}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<style>
+
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+    }
+
+    .breadcrumb-nav {
+        color: #1565c0;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .breadcrumb-nav a {
+        color: #1565c0;
+        text-decoration: none;
+        transition: color 0.3s;
+    }
+
+    .breadcrumb-nav a:hover {
+        color: #0d47a1;
+    }
+
+    .back-btn {
+        background-color: #42a5f5;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 25px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .back-btn:hover {
+        background-color: #5a6268;
+        color: white;
+    }
+
+    .patient-details-container {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        overflow: hidden;
+        margin-bottom: 30px;
+    }
+
+    .patient-header {
+        background: linear-gradient(135deg, #42a5f5, #1e88e5);
+        color: white;
+        padding: 30px;
+        text-align: center;
+        position: relative;
+    }
+
+    .patient-avatar {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+        font-size: 3rem;
+        font-weight: bold;
+        border: 4px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .patient-name {
+        font-size: 2rem;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .patient-id {
+        font-size: 1.1rem;
+        opacity: 0.9;
+        margin-bottom: 5px;
+    }
+
+    .patient-basic-info {
+        display: flex;
+        justify-content: center;
+        gap: 30px;
+        margin-top: 15px;
+        flex-wrap: wrap;
+    }
+
+    .basic-info-item {
+        text-align: center;
+        opacity: 0.9;
+    }
+
+    .basic-info-item i {
+        font-size: 1.2rem;
+        margin-bottom: 5px;
+        display: block;
+    }
+
+    .patient-body {
+        padding: 0;
+    }
+
+    .info-section {
+        padding: 25px 30px;
+        border-bottom: 1px solid #e9ecef;
+    }
+
+    .info-section:last-child {
+        border-bottom: none;
+    }
+
+    .section-title {
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: #1565c0;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+    }
+
+    .info-item {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding: 15px;
+        background: #f8f9fa;
+        border-radius: 10px;
+        border-left: 4px solid #42a5f5;
+    }
+
+    .info-icon {
+        width: 40px;
+        height: 40px;
+        background: #42a5f5;
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+        flex-shrink: 0;
+    }
+
+    .info-content {
+        flex: 1;
+    }
+
+    .info-label {
+        font-size: 0.9rem;
+        color: #666;
+        margin-bottom: 3px;
+        font-weight: 500;
+    }
+
+    .info-value {
+        font-size: 1.1rem;
+        color: #333;
+        font-weight: 600;
+    }
+
+    .gender-male {
+        color: #007bff;
+    }
+
+    .gender-female {
+        color: #e91e63;
+    }
+
+    .actions-section {
+        padding: 25px 30px;
+        background: #f8f9fa;
+        text-align: center;
+    }
+
+    .action-btn {
+        background-color: #42a5f5;
+        color: white;
+        border: none;
+        padding: 12px 25px;
+        border-radius: 25px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s;
+        margin: 0 10px;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .action-btn:hover {
+        background-color: #1e88e5;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        color: white;
+    }
+
+    .action-btn.secondary {
+        background-color: #6c757d;
+    }
+
+    .action-btn.secondary:hover {
+        background-color: #5a6268;
+    }
+
+    .action-btn.success {
+        background-color: #28a745;
+    }
+
+    .action-btn.success:hover {
+        background-color: #218838;
+    }
+    
+</style>
+
+<div class="container">
+    <div class="page-header">
+        <div class="breadcrumb-nav">
+            <a asp-page="/Doctor/PatientList">
+                <i class="fas fa-list"></i> Danh sách bệnh nhân
+            </a>
+            <span>></span>
+            <span>Chi tiết bệnh nhân</span>
+        </div>
+        <a asp-page="/Doctor/PatientList" class="back-btn">
+            <i class="fas fa-arrow-left"></i>
+            Quay lại
+        </a>
+    </div>
+
+    @if (patient != null)
+    {
+        <div class="patient-details-container">
+            <!-- Patient Header -->
+            <div class="patient-header">
+                <div class="patient-avatar">
+                    @patient.Name.Split(' ').Last().Substring(0, 1).ToUpper()
+                </div>
+                <div class="patient-name">@patient.Name</div>
+                <div class="patient-id">ID: @patient.InsuranceNumber</div>
+                <div class="patient-basic-info">
+                    <div class="basic-info-item">
+                        <i class="fas fa-phone"></i>
+                        <div>@patient.Phone</div>
+                    </div>
+                    <div class="basic-info-item">
+                        <i class="fas fa-birthday-cake"></i>
+                        <div>@patient.Dob.ToString("dd/MM/yyyy")</div>
+                    </div>
+                    <div class="basic-info-item">
+                        <i class="fas fa-@(patient.Gender == "male" ? "mars" : "venus")"></i>
+                        <div>@(patient.Gender == "male" ? "Nam" : "Nữ")</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Patient Body -->
+            <div class="patient-body">
+                <!-- Personal Information -->
+                <div class="info-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-user"></i>
+                        Thông tin cá nhân
+                    </h3>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-signature"></i>
+                            </div>
+                            <div class="info-content">
+                                <div class="info-label">Họ và tên</div>
+                                <div class="info-value">@patient.Name</div>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-phone"></i>
+                            </div>
+                            <div class="info-content">
+                                <div class="info-label">Số điện thoại</div>
+                                <div class="info-value">@patient.Phone</div>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-birthday-cake"></i>
+                            </div>
+                            <div class="info-content">
+                                <div class="info-label">Ngày sinh</div>
+                                <div class="info-value">@patient.Dob.ToString("dd/MM/yyyy")</div>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-@(patient.Gender == "male" ? "mars" : "venus")"></i>
+                            </div>
+                            <div class="info-content">
+                                <div class="info-label">Giới tính</div>
+                                <div class="info-value @(patient.Gender == "male" ? "gender-male" : "gender-female")">
+                                    @(patient.Gender == "male" ? "Nam" : "Nữ")
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact Information -->
+                <div class="info-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-address-card"></i>
+                        Thông tin liên hệ
+                    </h3>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <div class="info-content">
+                                <div class="info-label">Địa chỉ</div>
+                                <div class="info-value">@patient.Address</div>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-id-card"></i>
+                            </div>
+                            <div class="info-content">
+                                <div class="info-label">Số bảo hiểm</div>
+                                <div class="info-value">@patient.InsuranceNumber</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="actions-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-cogs"></i>
+                        Thao tác
+                    </h3>
+                    <div>
+                        <a asp-page="/Doctor/LabExamination" asp-route-appointmentId="@patient.AppointmentId" class="action-btn success">
+                            <i class="fas fa-stethoscope"></i>
+                            Bắt đầu khám
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="patient-details-container">
+            <div class="empty-state" style="text-align: center; padding: 60px 20px; color: #666;">
+                <i class="fas fa-user-times" style="font-size: 4rem; margin-bottom: 20px; color: #ccc;"></i>
+                <h3>Không tìm thấy thông tin bệnh nhân</h3>
+                <p>Vui lòng kiểm tra lại thông tin hoặc quay lại danh sách bệnh nhân.</p>
+                <a asp-page="/Doctor/PatientList" class="action-btn">
+                    <i class="fas fa-arrow-left"></i>
+                    Quay lại danh sách
+                </a>
+            </div>
+        </div>
+    }
+</div>
+
+
+<script>
+    // Add any JavaScript functionality here if needed
+    document.addEventListener('DOMContentLoaded', function() {
+        // Animation for info items
+        const infoItems = document.querySelectorAll('.info-item');
+        infoItems.forEach((item, index) => {
+            setTimeout(() => {
+                item.style.opacity = '0';
+                item.style.transform = 'translateY(20px)';
+                item.style.transition = 'all 0.5s ease';
+                setTimeout(() => {
+                    item.style.opacity = '1';
+                    item.style.transform = 'translateY(0)';
+                }, 50);
+            }, index * 100);
+        });
+    });
+</script>

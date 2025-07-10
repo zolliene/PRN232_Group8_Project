@@ -22,11 +22,11 @@
                 ("MedicalHistory", "/Index")
                 },
         ["doctor"] = new List<(string, string)> {
-                ("Patient List", "/Index"),
+                ("Patient List", "/Doctor/PatientList"),
                 ("Lab Result", "/Index")
                 },
         ["receptionist"] = new List<(string, string)> {
-                ("Check In List", "/Index"),
+                ("Check In List", "/Receptionist/CheckInList"),
               
                 }
     };
@@ -122,7 +122,7 @@
                         @foreach (var item in menuItems)
                         {
                             <li class="nav-item mx-1">
-                                <a class="nav-link text-dark fs-4" href="@item.Path">@item.Label</a>
+                                <a class="nav-link text-dark fs-4" asp-page="@item.Path">@item.Label</a>
                             </li>
                         }
                     </ul>
