@@ -1,0 +1,456 @@
+﻿@page
+@using Microsoft.IdentityModel.Tokens
+@model FE_RazorPage.Pages.Doctor.LabResults
+@{
+ViewData["Title"] = "Lab Results";
+var labResultsList = Model.LabResult;
+}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<style>
+    .clinic-header {
+        background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+        padding: 40px 0;
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .clinic-title {
+        color: #1565c0;
+        font-size: 2.5rem;
+        font-weight: bold;
+        margin-bottom: 15px;
+    }
+
+    .clinic-subtitle {
+        color: #666;
+        font-size: 1.1rem;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+    }
+
+    .breadcrumb-nav {
+        color: #1565c0;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .breadcrumb-nav a {
+        color: #1565c0;
+        text-decoration: none;
+        transition: color 0.3s;
+    }
+
+    .breadcrumb-nav a:hover {
+        color: #0d47a1;
+    }
+
+    .back-btn {
+        background-color: #42a5f5;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 25px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .back-btn:hover {
+        background-color: #1e88e5;
+        color: white;
+    }
+
+    /* Search and Filter Section */
+    .search-section {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        padding: 25px;
+        margin-bottom: 30px;
+    }
+
+    .info-display {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+        padding: 15px 20px;
+        border-radius: 10px;
+        color: #1565c0;
+        font-weight: 500;
+        gap: 10px;
+    }
+
+    .info-display i {
+        font-size: 1.2rem;
+    }
+
+    .search-controls {
+        display: flex;
+        gap: 20px;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    .search-group {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .search-group label {
+        font-weight: 500;
+        color: #333;
+        font-size: 0.9rem;
+    }
+
+    .search-input {
+        padding: 10px 15px;
+        border: 2px solid #e9ecef;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: border-color 0.3s;
+        min-width: 200px;
+    }
+
+    .search-input:focus {
+        outline: none;
+        border-color: #42a5f5;
+    }
+
+    .search-btn {
+        background-color: #42a5f5;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        align-self: flex-end;
+    }
+
+    .search-btn:hover {
+        background-color: #1e88e5;
+    }
+
+    .clear-btn {
+        background-color: #6c757d;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        align-self: flex-end;
+        text-decoration: none;
+    }
+
+    .clear-btn:hover {
+        background-color: #5a6268;
+        color: white;
+    }
+
+    .lab-results-list-container {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        overflow: hidden;
+        margin-bottom: 30px;
+    }
+
+    .list-header {
+        background-color: #f8f9fa;
+        padding: 20px;
+        border-bottom: 1px solid #e9ecef;
+        font-weight: 600;
+        color: #333;
+    }
+
+    .lab-result-item {
+        padding: 20px;
+        border-bottom: 1px solid #e9ecef;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        transition: background-color 0.3s;
+        cursor: pointer;
+    }
+
+    .lab-result-item:hover {
+        background-color: #f8f9fa;
+        transform: translateY(-2px);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .lab-result-item:last-child {
+        border-bottom: none;
+    }
+
+    .lab-result-info {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        flex: 1;
+    }
+
+    .result-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #28a745, #20c997);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        font-size: 1.2rem;
+    }
+
+    .lab-result-details h4 {
+        margin: 0 0 5px 0;
+        color: #333;
+        font-size: 1.1rem;
+    }
+
+    .lab-result-meta {
+        color: #666;
+        font-size: 0.9rem;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        align-items: center;
+    }
+
+    .test-date {
+        color: #1565c0;
+        font-weight: 500;
+    }
+
+    .result-actions {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .test-type-badge {
+        background-color: #e9ecef;
+        color: #495057;
+        padding: 4px 10px;
+        border-radius: 12px;
+        font-size: 0.8rem;
+    }
+
+    .result-status-badge {
+        padding: 4px 10px;
+        border-radius: 12px;
+        font-size: 0.8rem;
+        font-weight: 500;
+    }
+
+    .result-normal {
+        background-color: #d4edda;
+        color: #155724;
+    }
+
+    .result-abnormal {
+        background-color: #f8d7da;
+        color: #721c24;
+    }
+
+    .result-pending {
+        background-color: #e2e3e5;
+        color: #495057;
+    }
+
+    .view-btn {
+        background-color: #28a745;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 6px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .view-btn:hover {
+        background-color: #218838;
+        color: white;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: #666;
+    }
+
+    .empty-state i {
+        font-size: 4rem;
+        margin-bottom: 20px;
+        color: #ccc;
+    }
+
+    .result-value {
+        font-weight: 600;
+        color: #28a745;
+        background-color: #d4edda;
+        padding: 4px 8px;
+        border-radius: 6px;
+        font-size: 0.9rem;
+    }
+
+    .result-summary {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .result-main {
+        font-size: 1rem;
+        font-weight: 600;
+    }
+
+    .result-details {
+        font-size: 0.85rem;
+        color: #666;
+    }
+</style>
+
+<div class="container">
+    <div class="page-header">
+        <div class="breadcrumb-nav">
+            <a asp-page="/Doctor/PatientList">
+                <i class="fas fa-list"></i> Danh sách bệnh nhân
+            </a>
+            <span>></span>
+            <span><i class="fas fa-flask"></i> Kết quả xét nghiệm (3 ngày gần đây)</span>
+        </div>
+        <a asp-page="/Doctor/PatientList" class="back-btn">
+            <i class="fas fa-arrow-left"></i>
+            Quay lại
+        </a>
+    </div>
+
+    <!-- Info Section -->
+    <div class="search-section">
+        <div class="info-display">
+            <div class="info-item">
+                <i class="fas fa-info-circle"></i>
+                <span>Hiển thị kết quả xét nghiệm của 3 ngày gần đây (từ @DateTime.Now.AddDays(-3).ToString("dd/MM/yyyy") đến @DateTime.Now.ToString("dd/MM/yyyy"))</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="lab-results-list-container">
+        <div class="list-header">
+            Danh sách kết quả xét nghiệm (@Model.LabResult.Count kết quả)
+        </div>
+
+        @if (!labResultsList.IsNullOrEmpty())
+        {
+        @foreach (var labResult in labResultsList)
+        {
+        <div class="lab-result-item" onclick="window.location.href='/Doctor/LabResultDetails/@labResult.Id'">
+            <div class="lab-result-info">
+                <div class="result-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="lab-result-details">
+                    <h4>@labResult.PatientName</h4>
+                    <div class="lab-result-meta">
+                        <span>📞 @labResult.PatientPhone</span>
+                        <span>🎂 @labResult.PatientDob.ToString("dd/MM/yyyy")</span>
+                        <span class="test-date">📅 @labResult.OrderTime.ToString("dd/MM/yyyy HH:mm")</span>
+                        <span class="test-type-badge">@labResult.TestTypeName (@labResult.TestTypeCode)</span>
+                        @if (labResult.ResultDate.HasValue)
+                        {
+                        <span class="test-date">🕒 Kết quả: @labResult.ResultDate.Value.ToString("dd/MM/yyyy HH:mm")</span>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="result-actions">
+                <div class="result-summary">
+                    <div class="result-main">
+                        <span class="result-value">@labResult.ResultValue @labResult.Unit</span>
+                    </div>
+                    <div class="result-details">
+                        Tham chiếu: @labResult.ReferenceRange
+                    </div>
+                </div>
+
+                @if (!string.IsNullOrEmpty(labResult.ResultStatus))
+                {
+                <div class="result-status-badge result-@labResult.ResultStatus.ToLower()">
+                    @switch (labResult.ResultStatus.ToLower())
+                    {
+                    case "normal":
+                    <span>Bình thường</span>
+                    break;
+                    case "abnormal":
+                    <span>Bất thường</span>
+                    break;
+                    default:
+                    <span>@labResult.ResultStatus</span>
+                    break;
+                    }
+                </div>
+                }
+
+                <a href="/Doctor/LabResultDetails/@labResult.Id" class="view-btn" onclick="event.stopPropagation()">
+                    <i class="fas fa-eye"></i> Xem chi tiết
+                </a>
+            </div>
+        </div>
+        }
+        }
+        else
+        {
+        <div class="empty-state">
+            <i class="fas fa-flask"></i>
+            <h3>Chưa có kết quả xét nghiệm</h3>
+            <p>Chưa có kết quả xét nghiệm nào trong 3 ngày gần đây.</p>
+        </div>
+        }
+    </div>
+</div>
+
+<script>
+    // Add visual feedback for items
+    document.addEventListener('DOMContentLoaded', function() {
+        // Animation for result items
+        const resultItems = document.querySelectorAll('.lab-result-item');
+        resultItems.forEach((item, index) => {
+            setTimeout(() => {
+                item.style.opacity = '0';
+                item.style.transform = 'translateY(20px)';
+                item.style.transition = 'all 0.5s ease';
+                setTimeout(() => {
+                    item.style.opacity = '1';
+                    item.style.transform = 'translateY(0)';
+                }, 50);
+            }, index * 50);
+        });
+    });
+</script>

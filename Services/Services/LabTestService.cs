@@ -1,10 +1,12 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using PlanyApp.Repository.Base;
 using Repositories.Models;
 using Repositories.UnitOfWork;
 using Services.Dto.request;
+using Services.Dto.response;
 using Services.Interfaces;
 
 namespace Services.Services;
@@ -55,6 +57,59 @@ public class LabTestService : ILabTestService
         finally
         {
             _unitOfWork.Dispose();
+        }
+    }
+
+    public async Task<IList<GetLabResultRes>> GetLabResultsWithResults(DateOnly? date)
+    {
+        try
+        {
+            _logger.LogInformation("Start getting lab results with results for recent 3 days");
+            
+            // Lấy kết quả xét nghiệm của 3 ngày trước đến nay
+            var endDate = DateOnly.FromDateTime(DateTime.Now);
+            var startDate = endDate.AddDays(-3);
+            
+            var labTests = await _labRepository.GetAllAsync(query => query
+                .Include(lt => lt.Appointment)
+                    .ThenInclude(a => a.Patient)
+                .Include(lt => lt.TestType)
+                .Where(lt => !string.IsNullOrEmpty(lt.ResultValue)) // Chỉ lấy những test đã có kết quả
+                .Where(lt => DateOnly.FromDateTime(lt.OrderTime) >= startDate && 
+                           DateOnly.FromDateTime(lt.OrderTime) <= endDate) // Lọc 3 ngày trước đến nay
+                .OrderByDescending(lt => lt.ResultDate)
+            );
+
+            return _mapper.Map<IList<GetLabResultRes>>(labTests);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError("Error at get lab results with results cause by {}", e.Message);
+            throw;
+        }
+    }
+
+    public async Task<GetLabResultRes> GetLabResultById(int id)
+    {
+        try
+        {
+            _logger.LogInformation("Start getting lab result by id: {}", id);
+            
+            var labTest = (await _labRepository.FindIncludeAsync(
+                lt => lt.Id == id,
+                lt => lt.Appointment.Patient,
+                lt => lt.TestType
+            )).FirstOrDefault();
+
+            if (labTest == null)
+                throw new KeyNotFoundException("Lab result not found");
+
+            return _mapper.Map<GetLabResultRes>(labTest);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError("Error at get lab result by id cause by {}", e.Message);
+            throw;
         }
     }
 }
