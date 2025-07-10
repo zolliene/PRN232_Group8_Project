@@ -1,0 +1,12 @@
+﻿@page
+@model FE_RazorPage.Pages.Admin.Doctors.DeleteModel
+@{
+    ViewData["Title"] = "Xóa bác sĩ";
+}
+
+<h3>Bạn có chắc muốn xóa bác sĩ: @Model.Doctor.Name?</h3>
+
+<form method="post">
+    <button type="submit" class="btn btn-danger">Xóa</button>
+    <a asp-page="Index" class="btn btn-secondary">Hủy</a>
+</form>

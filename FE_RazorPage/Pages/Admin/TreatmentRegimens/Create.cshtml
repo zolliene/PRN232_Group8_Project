@@ -1,0 +1,27 @@
+﻿@page
+@model FE_RazorPage.Pages.Admin.TreatmentRegimens.CreateModel
+@{
+    ViewData["Title"] = "Thêm phác đồ điều trị";
+}
+
+<h2>Thêm phác đồ điều trị</h2>
+
+<form method="post">
+    <div class="mb-3">
+        <label class="form-label">Tên phác đồ</label>
+        <input asp-for="Regimen.RegimenName" class="form-control" />
+        <span asp-validation-for="Regimen.RegimenName" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Thuốc</label>
+        <input asp-for="Regimen.Drugs" class="form-control" />
+        <span asp-validation-for="Regimen.Drugs" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Mô tả</label>
+        <textarea asp-for="Regimen.Description" class="form-control"></textarea>
+        <span asp-validation-for="Regimen.Description" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-success">💾 Lưu</button>
+    <a asp-page="Index" class="btn btn-secondary">🔙 Quay lại</a>
+</form>

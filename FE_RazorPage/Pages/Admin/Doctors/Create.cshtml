@@ -1,0 +1,45 @@
+﻿@page
+@model FE_RazorPage.Pages.Admin.Doctors.CreateModel
+@{
+    ViewData["Title"] = "Thêm bác sĩ";
+}
+<h2>Thêm bác sĩ</h2>
+
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger">
+        @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+        {
+            <div>@error.ErrorMessage</div>
+        }
+    </div>
+}
+
+<form method="post">
+    <div class="mb-3">
+        <label>Tên</label>
+        <input asp-for="Doctor.Name" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label>Email</label>
+        <input asp-for="Doctor.Email" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label>Chuyên môn</label>
+        <input asp-for="Doctor.Qualification" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label>Giấy phép</label>
+        <input asp-for="Doctor.LicenseNumber" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label>Ngày cấp</label>
+        <input asp-for="Doctor.DateOfLicense" type="date" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label>Hạn giấy phép</label>
+        <input asp-for="Doctor.LicenseExpiryDate" type="date" class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-success">Lưu</button>
+    <a asp-page="Index" class="btn btn-secondary">Hủy</a>
+</form>

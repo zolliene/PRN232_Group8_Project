@@ -1,0 +1,36 @@
+﻿@page
+@model FE_RazorPage.Pages.Admin.TreatmentRegimens.IndexModel
+@{
+    ViewData["Title"] = "Quản lý phác đồ điều trị";
+}
+
+<h2>Danh sách phác đồ điều trị</h2>
+    <a asp-page="Create" class="btn btn-success">➕ Thêm phác đồ mới</a>
+
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Tên phác đồ</th>
+            <th>Thuốc</th>
+            <th>Mô tả</th>
+            <th>Thao tác</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var regimen in Model.Regimens)
+        {
+            <tr>
+                <td>@regimen.RegimenName</td>
+                <td>@regimen.Drugs</td>
+                <td>@regimen.Description</td>
+                <td>
+                    <a asp-page="Edit" asp-route-id="@regimen.Id" class="btn btn-sm btn-primary">✏️ Sửa</a>
+                    <a asp-page="Delete" asp-route-id="@regimen.Id" class="btn btn-sm btn-danger">🗑️ Xóa</a>
+                    <a asp-page="/Admin/RegimenDrugs/Index" asp-route-RegimenId="@regimen.Id" class="btn btn-sm btn-info">💊 Xem thuốc </a>
+
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

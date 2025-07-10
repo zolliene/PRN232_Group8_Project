@@ -1,13 +1,6 @@
-﻿using Repositories.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Services.Dto
+﻿namespace FE_RazorPage.Models
 {
-    public class DoctorDTO
+    public class GetDoctorModel
     {
         public int Id { get; set; }
         public string Name { get; set; } = null!;
@@ -23,7 +16,8 @@ namespace Services.Dto
 
         public bool? IsActive { get; set; }
     }
-    public class CreateDoctorDTO
+
+    public class CreateDoctorModel
     {
         public string Name { get; set; } = null!;
         public string Email { get; set; } = null!;
@@ -32,10 +26,9 @@ namespace Services.Dto
         public DateOnly? DateOfLicense { get; set; }
         public DateOnly? LicenseExpiryDate { get; set; }
     }
-
-    public class UpdateDoctorDTO
+    public class UpdateDoctorModel
     {
-        public int Id { get; set; }                     
+        public int Id { get; set; }
         public string Name { get; set; } = null!;
         public string Email { get; set; } = null!;
         public string LicenseNumber { get; set; } = null!;
@@ -43,13 +36,4 @@ namespace Services.Dto
         public DateOnly? DateOfLicense { get; set; }
         public DateOnly? LicenseExpiryDate { get; set; }
     }
-
-    //public class CreateUserDTO
-    //{
-    //    public string Username { get; set; } = null!;
-    //    public string Email { get; set; } = null!;
-    //    public string Password { get; set; } = null!;
-    //    public string Role { get; set; }
-    //}
-
 }

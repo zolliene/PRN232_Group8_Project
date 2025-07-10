@@ -22,6 +22,8 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IAppointmentService, AppointmentService>();
 
 builder.Services.AddScoped<ICrudDoctorService, CrudDoctorService>();
+builder.Services.AddScoped<IArvDrugService, ArvDrugService>();
+builder.Services.AddScoped<ITreatmentRegimenService, TreatmentRegimenService>();
 
 
 builder.Services.AddAuthentication(options =>

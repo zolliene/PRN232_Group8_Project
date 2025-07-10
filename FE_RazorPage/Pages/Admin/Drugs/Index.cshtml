@@ -1,0 +1,60 @@
+﻿@page
+@model FE_RazorPage.Pages.Admin.Drugs.IndexModel
+@{
+    ViewData["Title"] = "Quản lý thuốc ARV";
+}
+
+<h2>Danh sách thuốc ARV</h2>
+
+<a asp-page="Create" class="btn btn-success mb-3">Thêm thuốc mới</a>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Tên thuốc</th>
+            <th>Nhóm</th>
+            <th>Hoạt chất</th>
+            <th>Mô tả</th>
+            <th>Thao tác</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var drug in Model.Drugs)
+        {
+            <tr>
+                <td>@drug.Name</td>
+                <td>@Model.GetGroupName(drug.GroupId)</td>
+                <td>@drug.ActiveIngredient</td>
+                <td>@drug.Description</td>
+                <td>
+                    <a asp-page="Edit" asp-route-id="@drug.Id" class="btn btn-sm btn-primary">✏️ Sửa</a>
+                    <a asp-page="Delete" asp-route-id="@drug.Id" class="btn btn-sm btn-danger">🗑️ Xóa</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<hr />
+
+<h2 class="mt-5">Danh sách nhóm thuốc</h2>
+
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>Mã nhóm</th>
+            <th>Tên nhóm</th>
+            <th>Mô tả</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var group in Model.Groups)
+        {
+            <tr>
+                <td>@group.Code</td>
+                <td>@group.Name</td>
+                <td>@group.Description</td>
+            </tr>
+        }
+    </tbody>
+</table>

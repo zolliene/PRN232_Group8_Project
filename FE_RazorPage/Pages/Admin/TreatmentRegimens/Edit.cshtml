@@ -1,0 +1,26 @@
+﻿@page "{id:int}"
+@model FE_RazorPage.Pages.Admin.TreatmentRegimens.EditModel
+@{
+    ViewData["Title"] = "Chỉnh sửa phác đồ điều trị";
+}
+
+<h2>Chỉnh sửa phác đồ</h2>
+
+<form method="post">
+    <input type="hidden" asp-for="Regimen.Id" />
+
+    <div class="mb-3">
+        <label class="form-label">Tên phác đồ</label>
+        <input asp-for="Regimen.RegimenName" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Thuốc</label>
+        <input asp-for="Regimen.Drugs" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Mô tả</label>
+        <textarea asp-for="Regimen.Description" class="form-control"></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">💾 Cập nhật</button>
+    <a asp-page="Index" class="btn btn-secondary">🔙 Quay lại</a>
+</form>

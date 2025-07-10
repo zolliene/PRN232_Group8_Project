@@ -1,0 +1,45 @@
+﻿@page
+@model FE_RazorPage.Pages.Admin.Drugs.CreateModel
+@{
+    ViewData["Title"] = "Thêm thuốc ARV";
+}
+
+<h2>Thêm thuốc mới</h2>
+
+<form method="post">
+    <div class="mb-3">
+        <label asp-for="Drug.Name" class="form-label">Tên thuốc</label>
+        <input asp-for="Drug.Name" class="form-control" />
+        <span asp-validation-for="Drug.Name" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Drug.GroupId" class="form-label">Nhóm thuốc</label>
+        <select asp-for="Drug.GroupId" class="form-select">
+            <option value="">-- Chọn nhóm --</option>
+            @foreach (var group in Model.Groups)
+            {
+                <option value="@group.Id">@group.Name</option>
+            }
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Drug.ActiveIngredient" class="form-label">Hoạt chất</label>
+        <input asp-for="Drug.ActiveIngredient" class="form-control" />
+        <span asp-validation-for="Drug.ActiveIngredient" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Drug.Description" class="form-label">Mô tả</label>
+        <textarea asp-for="Drug.Description" class="form-control"></textarea>
+        <span asp-validation-for="Drug.Description" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-success">Lưu</button>
+    <a asp-page="Index" class="btn btn-secondary">Quay lại</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

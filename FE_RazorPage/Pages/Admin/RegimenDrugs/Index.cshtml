@@ -1,0 +1,60 @@
+﻿@page "{RegimenId:int}"
+@model FE_RazorPage.Pages.Admin.RegimenDrugs.IndexModel
+@{
+    ViewData["Title"] = "Danh sách thuốc trong phác đồ";
+}
+
+<h2>💊 Danh sách thuốc thuộc phác đồ</h2>
+
+<a asp-page="Create" asp-route-RegimenId="@Model.RegimenId" class="btn btn-success mb-3">➕ Thêm thuốc</a>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Tên thuốc</th>
+            <th>Liều lượng</th>
+            <th>Số lần/ngày</th>
+            <th>Thao tác</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.RegimenDrugs != null && Model.RegimenDrugs.Any())
+        {
+            foreach (var drug in Model.RegimenDrugs)
+            {
+                <tr>
+                    <td>@drug.DrugName</td>
+                    <td>@drug.Dose</td>
+                    <td>@drug.Frequency</td>
+                    <td>
+                        <a asp-page="Edit"
+                           asp-route-id="@drug.Id"
+                           asp-route-RegimenId="@Model.RegimenId"
+                           asp-route-drugName="@drug.DrugName"
+                           asp-route-dose="@drug.Dose"
+                           asp-route-frequency="@drug.Frequency"
+                           class="btn btn-sm btn-primary">
+                            ✏️ Sửa
+                        </a>
+
+                        <a asp-page="Delete"
+                           asp-route-id="@drug.Id"
+                           asp-route-RegimenId="@Model.RegimenId"
+                           asp-route-drugName="@drug.DrugName"
+                           asp-route-dose="@drug.Dose"
+                           asp-route-frequency="@drug.Frequency"
+                           class="btn btn-sm btn-danger">
+                            🗑️ Xóa
+                        </a>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="4" class="text-center text-muted">Không có thuốc nào trong phác đồ này.</td>
+            </tr>
+        }
+    </tbody>
+</table>

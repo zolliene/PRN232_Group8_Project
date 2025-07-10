@@ -4,6 +4,10 @@
 builder.Services.AddRazorPages();
 builder.Services.AddSession();
 
+builder.Services.AddHttpClient("MyApi", client =>
+{
+    client.BaseAddress = new Uri("https://localhost:7022/"); // Thay đổi nếu API khác cổng
+});
 
 var app = builder.Build();
 
@@ -14,6 +18,10 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+app.UseRouting();
+
+
+
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();

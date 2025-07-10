@@ -3,9 +3,10 @@
     var menus = new Dictionary<string, List<(string Label, string Path)>>()
     {
         ["admin"] = new List<(string, string)> {
-                ("Drugs", "/Index"),
-                ("Regimens", "/Index"),
-                ("Doctors", "/Index")
+               ("Drugs", "/Admin/Drugs/Index"),
+               ("TreatmentRegimens", "/Admin/TreatmentRegimens/Index"),
+               ("Doctors", "/Admin/Doctors/Index")
+
                 },
         ["staff"] = new List<(string, string)> {
                 ("Test pending", "/Index"),

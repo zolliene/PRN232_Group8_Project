@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.14.36202.13
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Repositories", "Repositories\Repositories.csproj", "{D6AC14C8-6E39-4C71-AFCD-0E16D24CD2A8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Repositories", "Repositories\Repositories.csproj", "{D6AC14C8-6E39-4C71-AFCD-0E16D24CD2A8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services", "Services\Services.csproj", "{C3B7420F-154F-4756-BB80-8FBA04CC8451}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services", "Services\Services.csproj", "{C3B7420F-154F-4756-BB80-8FBA04CC8451}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebAPI", "WebAPI\WebAPI.csproj", "{A650115A-9D80-4E40-907B-AB38B76CC3E9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebAPI", "WebAPI\WebAPI.csproj", "{A650115A-9D80-4E40-907B-AB38B76CC3E9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FE_RazorPage", "FE_RazorPage\FE_RazorPage.csproj", "{B6B5109C-5B18-4123-8359-2F3096B91924}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FE_RazorPage", "FE_RazorPage\FE_RazorPage.csproj", "{B6B5109C-5B18-4123-8359-2F3096B91924}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

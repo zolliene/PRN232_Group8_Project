@@ -1,0 +1,38 @@
+﻿@page "{RegimenId:int}"
+@model FE_RazorPage.Pages.Admin.RegimenDrugs.CreateModel
+@{
+    ViewData["Title"] = "Thêm thuốc vào phác đồ";
+}
+
+<h2>Thêm thuốc vào phác đồ</h2>
+
+<form method="post">
+    <input type="hidden" asp-for="NewDrug.RegimenId" />
+
+    <div class="mb-3">
+        <label class="form-label">Chọn thuốc</label>
+        <select asp-for="NewDrug.DrugId" class="form-select">
+            <option value="">-- Chọn thuốc --</option>
+            @foreach (var drug in Model.AvailableDrugs)
+            {
+                <option value="@drug.Id">@drug.Name</option>
+            }
+        </select>
+        <span asp-validation-for="NewDrug.DrugId" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Liều lượng</label>
+        <input asp-for="NewDrug.Dose" class="form-control" />
+        <span asp-validation-for="NewDrug.Dose" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Số lần/ngày</label>
+        <input asp-for="NewDrug.Frequency" class="form-control" />
+        <span asp-validation-for="NewDrug.Frequency" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-success">💾 Lưu</button>
+    <a asp-page="Index" asp-route-RegimenId="@Model.RegimenId" class="btn btn-secondary">🔙 Quay lại</a>
+</form>

@@ -1,0 +1,32 @@
+﻿@page "{id:int}"
+@model FE_RazorPage.Pages.Admin.Drugs.DeleteModel
+@{
+    ViewData["Title"] = "Xóa thuốc ARV";
+}
+
+<h2>Xác nhận xóa thuốc</h2>
+
+<div class="alert alert-warning">
+    <strong>⚠️ Bạn có chắc chắn muốn xóa thuốc sau?</strong>
+</div>
+
+<div class="mb-3">
+    <label>Tên thuốc:</label>
+    <div>@Model.Drug.Name</div>
+</div>
+
+<div class="mb-3">
+    <label>Hoạt chất:</label>
+    <div>@Model.Drug.ActiveIngredient</div>
+</div>
+
+<div class="mb-3">
+    <label>Mô tả:</label>
+    <div>@Model.Drug.Description</div>
+</div>
+
+<form method="post">
+    <input type="hidden" asp-for="Drug.Id" />
+    <button type="submit" class="btn btn-danger">🗑️ Xóa</button>
+    <a asp-page="Index" class="btn btn-secondary">← Hủy</a>
+</form>

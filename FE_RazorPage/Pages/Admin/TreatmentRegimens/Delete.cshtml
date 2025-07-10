@@ -1,0 +1,19 @@
+﻿@page "{id:int}"
+@model FE_RazorPage.Pages.Admin.TreatmentRegimens.DeleteModel
+@{
+    ViewData["Title"] = "Xóa phác đồ điều trị";
+}
+
+<h2>Bạn có chắc chắn muốn xóa phác đồ này không?</h2>
+
+<div class="border p-3">
+    <h4>@Model.Regimen.RegimenName</h4>
+    <p><strong>Thuốc:</strong> @Model.Regimen.Drugs</p>
+    <p><strong>Mô tả:</strong> @Model.Regimen.Description</p>
+
+    <form method="post">
+        <input type="hidden" asp-for="Regimen.Id" />
+        <button type="submit" class="btn btn-danger">🗑️ Xác nhận xóa</button>
+        <a asp-page="Index" class="btn btn-secondary">❌ Hủy</a>
+    </form>
+</div>

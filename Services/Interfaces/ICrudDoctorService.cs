@@ -13,6 +13,9 @@ namespace Services.Interfaces
         Task<List<DoctorDTO>> GetCrudDoctorAccountsAsync();
         Task<bool> CreateDoctorAsync(CreateDoctorDTO dto);
         Task<bool> UpdateDoctorAsync(int userId, UpdateDoctorDTO dto);
-        Task<bool> DeleteDoctorAsync(int userId);
+        Task<bool> DeleteDoctorAsync(int id);      
+     //   Task<int?> CreateUserAsync(CreateUserDTO dto); 
+        
+
     }
 }

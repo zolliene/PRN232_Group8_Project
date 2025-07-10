@@ -41,13 +41,41 @@ namespace Services.Services
             return result;
         }
 
+        //public async Task<int?> CreateUserAsync(CreateUserDTO dto)
+        //{
+        //    // Check username trùng
+        //    var existing = await _unitOfWork.UserRepository.FirstOrDefaultAsync(u => u.Username == dto.Username);
+        //    if (existing != null)
+        //        return null; 
+
+        //    // Hash password nếu cần (hoặc giữ plain text nếu chưa làm login)
+        //    var user = new User
+        //    {
+        //        Username = dto.Username,
+        //        Email = dto.Email,
+        //        Password = dto.Password,
+        //        Role = dto.Role,
+        //        IsActive = true,
+        //        CreatedAt = DateTime.Now
+        //    };
+
+        //    await _unitOfWork.UserRepository.AddAsync(user);
+        //    await _unitOfWork.SaveAsync();
+
+        //    return user.Id;
+        //}
         public async Task<bool> CreateDoctorAsync(CreateDoctorDTO dto)
         {
+
+            var password = "123456";
+            var hashed = BCrypt.Net.BCrypt.HashPassword(password); // dùng thư viện BCrypt.Net
+        
             // Tạo user mới cho bác sĩ
             var user = new User
             {
                 Username = dto.Name,
                 Email = dto.Email,
+                Password = hashed,
                 IsActive = true,
                 Role = "Doctor"
             };
@@ -96,9 +124,9 @@ namespace Services.Services
         }
 
 
-        public async Task<bool> DeleteDoctorAsync(int doctorId)
+        public async Task<bool> DeleteDoctorAsync(int id)
         {
-            var doctor = await _unitOfWork.DoctorRepository.GetByIdAsync(doctorId);
+            var doctor = await _unitOfWork.DoctorRepository.GetByIdAsync(id);
 
             if (doctor == null)
                 return false;

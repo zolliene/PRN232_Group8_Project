@@ -1,0 +1,25 @@
+﻿@page 
+@model FE_RazorPage.Pages.Admin.RegimenDrugs.EditModel
+@{
+    ViewData["Title"] = "Sửa thuốc trong phác đồ";
+}
+
+<h2>Sửa thuốc: @Model.DrugName</h2>
+
+<form method="post">
+    <input type="hidden" asp-for="Drug.Id" />
+    <input type="hidden" asp-for="RegimenId" />
+
+    <div class="form-group">
+        <label asp-for="Drug.Dose"></label>
+        <input asp-for="Drug.Dose" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Drug.Frequency"></label>
+        <input asp-for="Drug.Frequency" class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">💾 Lưu</button>
+    <a asp-page="Index" asp-route-RegimenId="@Model.RegimenId" class="btn btn-secondary">↩️ Quay lại</a>
+</form>

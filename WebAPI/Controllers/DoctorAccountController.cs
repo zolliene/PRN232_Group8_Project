@@ -22,7 +22,17 @@ namespace WebAPI.Controllers
             return Ok(result);
         }
 
-        [HttpPost]
+        //[HttpPost("create-user")]
+        //public async Task<IActionResult> CreateUser([FromBody] CreateUserDTO dto)
+        //{
+        //    var userId = await _crudDoctorService.CreateUserAsync(dto);
+        //    if (userId == null)
+        //        return BadRequest("Username đã tồn tại");
+
+        //    return Ok(new { message = "Tạo user thành công", userId });
+        //}
+
+        [HttpPost("create-doctor")]
         public async Task<IActionResult> Create([FromBody] CreateDoctorDTO dto)
         {
             var success = await _crudDoctorService.CreateDoctorAsync(dto);
@@ -39,9 +49,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteDoctor(int doctorId)
+        public async Task<IActionResult> DeleteDoctor(int id)
         {
-            var success = await _crudDoctorService.DeleteDoctorAsync(doctorId);
+            var success = await _crudDoctorService.DeleteDoctorAsync(id);
             if (!success)
                 return NotFound("Doctor not found or already deleted.");
             return Ok("Doctor deleted successfully");
