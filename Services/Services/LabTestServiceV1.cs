@@ -10,16 +10,16 @@ using System.Threading.Tasks;
 
 namespace Services.Services
 {
-    public class LabTestService : ILabTestService
+    public class LabTestServiceV1 : ILabTestServiceV1
     {
         private readonly PRN232_Group8Context _context;
 
-        public LabTestService(PRN232_Group8Context context)
+        public LabTestServiceV1(PRN232_Group8Context context)
         {
             _context = context;
         }
 
-        public  async Task<CreateLabTestDto> CreateLabTestId(CreateLabTestDto input)
+        public  async Task<CreateLabTestDtoV1> CreateLabTestId(CreateLabTestDtoV1 input)
         {
           
             var dto = new LabTest
@@ -64,7 +64,7 @@ namespace Services.Services
                     }
                 }
             }
-            var labTestResponse = new CreateLabTestDto
+            var labTestResponse = new CreateLabTestDtoV1
             {
                 AppointmentId = dto.AppointmentId,
                 TestTypeId = dto.TestTypeId,
@@ -95,7 +95,7 @@ namespace Services.Services
 
         }
 
-        public async Task<List<GetLabTestResq>> GetAllLabTest(DateTime inpuDate)
+        public async Task<List<GetLabTestResqV1>> GetAllLabTest(DateTime inpuDate)
         {
             var labtests = await _context.LabTests
          .Where(x =>
@@ -107,7 +107,7 @@ namespace Services.Services
              .ThenInclude(a => a.Patient)
          .Include(a => a.TestType)
          .ToListAsync();
-            var labTestResponses = labtests.Select(labTest => new GetLabTestResq(
+            var labTestResponses = labtests.Select(labTest => new GetLabTestResqV1(
                 )
             { Id = labTest.Id,
                 AppointmentId = labTest.AppointmentId,
@@ -140,14 +140,14 @@ namespace Services.Services
 
       
 
-        public async Task<GetLabTestResq> GetLabTestById(int id)
+        public async Task<GetLabTestResqV1> GetLabTestById(int id)
         {
             var labTest =  _context.LabTests.Include(a => a.Appointment)
              .ThenInclude(a => a.Examination)
          .Include(a => a.Appointment)
              .ThenInclude(a => a.Patient)
          .Include(a => a.TestType).FirstOrDefault(x => x.Id == id);
-            var labresponse = new GetLabTestResq()
+            var labresponse = new GetLabTestResqV1()
             {
                 Id = labTest.Id,
                 AppointmentId = labTest.AppointmentId,
@@ -177,7 +177,7 @@ namespace Services.Services
 
         }
 
-        public async Task<GetLabTestResq> UpdateLabTestId(int id, CreateLabTestDto input)
+        public async Task<GetLabTestResqV1> UpdateLabTestId(int id, CreateLabTestDtoV1 input)
         {
             var checkInput = await _context.LabTests.FirstOrDefaultAsync(x => x.Id == id);
             if (checkInput == null)
@@ -225,7 +225,7 @@ namespace Services.Services
                 }
             }
 
-            var labTestResponse = new GetLabTestResq
+            var labTestResponse = new GetLabTestResqV1
             {
                 Id = checkInput.Id,
                 AppointmentId = checkInput.AppointmentId,

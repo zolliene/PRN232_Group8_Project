@@ -8,10 +8,10 @@ namespace WebAPI.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class LabTestController : Controller
+    public class LabTestV1Controller : Controller
     {
-        private readonly ILabTestService _IlasbTestService;
-        public LabTestController(ILabTestService labTestService)
+        private readonly ILabTestServiceV1 _IlasbTestService;
+        public LabTestV1Controller(ILabTestServiceV1 labTestService)
         {
             _IlasbTestService = labTestService;
         }
@@ -38,7 +38,7 @@ namespace WebAPI.Controllers
             });
         }
         [HttpPost("create")]
-        public async Task<IActionResult> CreateLabTest([FromBody] CreateLabTestDto dto)
+        public async Task<IActionResult> CreateLabTest([FromBody] CreateLabTestDtoV1 dto)
         {
             var res = await _IlasbTestService.CreateLabTestId(dto);
             return Ok(new ApiResponse<Object>
@@ -49,7 +49,7 @@ namespace WebAPI.Controllers
             });
         }
         [HttpPut("update")]
-        public async Task<IActionResult> UpdateLabTest([FromQuery] int id, [FromBody] CreateLabTestDto dto)
+        public async Task<IActionResult> UpdateLabTest([FromQuery] int id, [FromBody] CreateLabTestDtoV1 dto)
         {
             var res = await _IlasbTestService.UpdateLabTestId(id, dto);
             return Ok(new ApiResponse<Object>
