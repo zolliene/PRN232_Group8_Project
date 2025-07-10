@@ -27,10 +27,17 @@ builder.Services.AddScoped<IAppointmentService, AppointmentService>();
 builder.Services.AddScoped<IExaminationService, ExaminationService>();
 builder.Services.AddScoped<ITestTypeService, TestTypeService>();
 builder.Services.AddScoped<ILabTestService, LabTestService>();
+builder.Services.AddScoped<IDoctorListService, DoctorListService>();
 
 builder.Services.AddHttpContextAccessor();
 
 
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.PropertyNamingPolicy = null;
+        options.JsonSerializerOptions.Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping;
+    });
 
 builder.Services.AddAuthentication(options =>
 {
@@ -60,6 +67,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+
 
 app.UseHttpsRedirection();
 

@@ -40,7 +40,7 @@ namespace FE_RazorPage.Pages.Login
                     using var doc = JsonDocument.Parse(body);
                     var root = doc.RootElement;
 
-                    var dataElement = root.GetProperty("data");
+                    var dataElement = root.GetProperty("Data");
                     var token = dataElement.GetProperty("token").GetString();
                     var id = dataElement.GetProperty("id").GetInt32();
                     var role = dataElement.GetProperty("role").GetString();

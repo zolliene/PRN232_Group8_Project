@@ -1,15 +1,16 @@
 ﻿using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Diagnostics;
-using Services.Dto; 
+using Services.Dto.request; 
 using Services.Interfaces;
 using WebAPI.Models;
+using WebAPI.Controllers;
 
 namespace WebAPI.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class AuthController : ControllerBase
+    public class AuthController : BaseController
     {
         private readonly IAuthService _authService;
         public AuthController(IAuthService authService)
@@ -35,6 +36,19 @@ namespace WebAPI.Controllers
                 Status = 200,
                 Message = "Đăng nhập thành công"
             });
+        }
+        [HttpPost("register")]
+        public async Task<IActionResult> Register(RegisterPatientReq request)
+        {
+            try
+            {
+                await _authService.RegisterPatient(request);
+                return Ok(ApiResponse<string>.OkResponse("Success", "Registered successfully"));
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex, nameof(AuthController));
+            }
         }
 
     }
