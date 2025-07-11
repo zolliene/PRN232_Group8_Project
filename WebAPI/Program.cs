@@ -65,6 +65,7 @@ builder.Services.AddScoped<IAppointmentService, AppointmentService>();
 builder.Services.AddScoped<IExaminationService, ExaminationService>();
 builder.Services.AddScoped<ITestTypeService, TestTypeService>();
 builder.Services.AddScoped<ILabTestService, LabTestService>();
+builder.Services.AddScoped<ITreatmentRegimenService, TreatmentRegimenService>();
 
 builder.Services.AddHttpContextAccessor();
 

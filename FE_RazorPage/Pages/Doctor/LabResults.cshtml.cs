@@ -22,7 +22,8 @@ public class LabResults : PageModel
     }
 
     [BindProperty]
-    public List<GetLabResultRes> LabResult { get; set; } = new();
+    public List<GetAppointmentWithLabRes> AppointmentsWithLabResults { get; set; } = new();
+    
     public string? ErrorMessage { get; set; }
 
     public async Task<IActionResult> OnGetAsync()
@@ -31,26 +32,40 @@ public class LabResults : PageModel
         {
             var http = _httpClientFactory.CreateClient("BackendApi");
             var token = HttpContext.Session.GetString("jwtToken");
+            
+            if (string.IsNullOrEmpty(token))
+            {
+                return RedirectToPage("/Auth/Login");
+            }
+            
             http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-            var response = await http.GetAsync("Lab/results");
+            _logger.LogInformation("Calling API: Lab/appointments-with-results");
+            var response = await http.GetAsync("Lab/appointments-with-results");
             var json = await response.Content.ReadAsStringAsync();
-            var apiResult = JsonSerializer.Deserialize<ApiResponse<List<GetLabResultRes>>>(json, _jsonOptions);
             
-            if (response.StatusCode != HttpStatusCode.OK || apiResult?.Status != (int)HttpStatusCode.OK)
+            _logger.LogInformation("API Response Status: {StatusCode}", response.StatusCode);
+            _logger.LogInformation("API Response Body: {Json}", json);
+
+            var apiResult = JsonSerializer.Deserialize<ApiResponse<List<GetAppointmentWithLabRes>>>(json, _jsonOptions);
+            
+            if (response.StatusCode == HttpStatusCode.OK && apiResult?.Status == (int)HttpStatusCode.OK)
             {
-                ErrorMessage = apiResult?.Message ?? "Error occurred while fetching lab results";
-                _logger.LogError("Error getting lab results: {}", ErrorMessage);
+                AppointmentsWithLabResults = apiResult.Data ?? new List<GetAppointmentWithLabRes>();
+                _logger.LogInformation("Successfully loaded {Count} appointments with lab results", AppointmentsWithLabResults.Count);
             }
             else
             {
-                LabResult = apiResult.Data ?? new List<GetLabResultRes>();
+                ErrorMessage = apiResult?.Message ?? "Error occurred while fetching appointments with lab results";
+                _logger.LogError("Error getting appointments with lab results: {ErrorMessage}", ErrorMessage);
+                AppointmentsWithLabResults = new List<GetAppointmentWithLabRes>();
             }
         }
         catch (Exception e)
         {
-            _logger.LogError("Error at get lab results async cause by {}", e.Message);
-            ErrorMessage = "Không thể kết nối đến server";
+            _logger.LogError("Exception at get appointments with lab results async: {Message}", e.Message);
+            ErrorMessage = "Không thể kết nối đến server: " + e.Message;
+            AppointmentsWithLabResults = new List<GetAppointmentWithLabRes>();
         }
         
         return Page();

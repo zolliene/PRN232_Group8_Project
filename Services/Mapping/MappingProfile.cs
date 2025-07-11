@@ -30,7 +30,17 @@ public class MappingProfile : Profile
                 src.Appointment.Patient.FirstName + " " + src.Appointment.Patient.LastName))
             .ForMember(dest => dest.PatientPhone, opt => opt.MapFrom(src => src.Appointment.Patient.Phone))
             .ForMember(dest => dest.PatientDob, opt => opt.MapFrom(src => src.Appointment.Patient.Dob))
+            .ForMember(dest => dest.PatientGender, opt => opt.MapFrom(src => src.Appointment.Patient.Gender))
             .ForMember(dest => dest.TestTypeName, opt => opt.MapFrom(src => src.TestType.Name))
             .ForMember(dest => dest.TestTypeCode, opt => opt.MapFrom(src => src.TestType.Code));
+
+        CreateMap<TreatmentRegimensMaster, GetTreatmentRegimenRes>();
+
+        CreateMap<RegimenDrug, GetRegimenDrugRes>()
+            .ForMember(dest => dest.DrugName, opt => opt.MapFrom(src => src.Drug.Name))
+            .ForMember(dest => dest.ActiveIngredient, opt => opt.MapFrom(src => src.Drug.ActiveIngredient))
+            .ForMember(dest => dest.DrugGroupName, opt => opt.MapFrom(src => src.Drug.Group.Name));
+
+        CreateMap<CreatePatientRegimenReq, PatientRegimen>();
     }
 }

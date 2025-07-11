@@ -112,4 +112,101 @@ public class LabTestService : ILabTestService
             throw;
         }
     }
+    public async Task<IList<GetAppointmentWithLabRes>> GetAppointmentsWithLabResults()
+    {
+        try
+        {
+            _logger.LogInformation("Start getting appointments with lab results for recent 3 days");
+            
+            // Lấy appointments có lab results trong 3 ngày gần đây
+            var endDate = DateOnly.FromDateTime(DateTime.Now);
+            var startDate = endDate.AddDays(-3);
+            
+            var appointments = await _unitOfWork.AppointmentRepository.GetAllAsync(query => query
+                .Include(a => a.Patient)
+                .Include(a => a.LabTests.Where(lt => !string.IsNullOrEmpty(lt.ResultValue)))
+                .Where(a => a.Date >= startDate && a.Date <= endDate)
+                .Where(a => a.LabTests.Any(lt => !string.IsNullOrEmpty(lt.ResultValue))) // Chỉ lấy appointments có lab results
+                .OrderByDescending(a => a.Date)
+            );
+
+            var result = appointments.Select(a => new GetAppointmentWithLabRes
+            {
+                Id = a.Id,
+                PatientId = a.PatientId,
+                PatientName = a.Patient.FirstName + " " + a.Patient.LastName,
+                PatientPhone = a.Patient.Phone,
+                PatientDob = a.Patient.Dob,
+                PatientGender = a.Patient.Gender,
+                AppointmentDate = a.Date ?? DateOnly.FromDateTime(DateTime.Now),
+                Session = a.Session,
+                Status = a.Status,
+                LabResultCount = a.LabTests.Count(lt => !string.IsNullOrEmpty(lt.ResultValue))
+            }).ToList();
+
+            return result;
+        }
+        catch (Exception e)
+        {
+            _logger.LogError("Error at get appointments with lab results cause by {}", e.Message);
+            throw;
+        }
+    }
+    public async Task<GetAppointmentLabResultsRes> GetAppointmentLabResults(int appointmentId)
+{
+    try
+    {
+        _logger.LogInformation("Start getting appointment lab results for appointment {}", appointmentId);
+        
+        var appointment = (await _unitOfWork.AppointmentRepository.FindIncludeAsync(
+            a => a.Id == appointmentId,
+            a => a.Patient
+        )).FirstOrDefault();
+
+        if (appointment == null)
+            throw new KeyNotFoundException("Appointment not found");
+
+        // Get lab tests with includes for TestType and LabStaff
+        var labTests = await _unitOfWork.LabTestRepository.GetAllAsync(query => query
+            .Include(lt => lt.TestType)
+            .Include(lt => lt.LabStaff)
+            .Where(lt => lt.AppointmentId == appointmentId && !string.IsNullOrEmpty(lt.ResultValue))
+            .OrderByDescending(lt => lt.ResultDate)
+        );
+
+        var result = new GetAppointmentLabResultsRes
+        {
+            AppointmentId = appointment.Id,
+            PatientName = appointment.Patient.FirstName + " " + appointment.Patient.LastName,
+            PatientPhone = appointment.Patient.Phone,
+            PatientDob = appointment.Patient.Dob,
+            PatientGender = appointment.Patient.Gender,
+            PatientAddress = appointment.Patient.Address,
+            PatientInsuranceNumber = appointment.Patient.InsuranceNumber,
+            AppointmentDate = appointment.Date ?? DateOnly.FromDateTime(DateTime.Now),
+            Session = appointment.Session,
+            LabResults = labTests.Select(lt => new LabResultDetailRes
+            {
+                Id = lt.Id,
+                TestTypeName = lt.TestType.Name,
+                TestTypeCode = lt.TestType.Code,
+                OrderTime = lt.OrderTime,
+                ResultValue = lt.ResultValue,
+                Unit = lt.Unit,
+                ReferenceRange = lt.ReferenceRange,
+                ResultStatus = lt.ResultStatus,
+                Comments = lt.Comments,
+                ResultDate = lt.ResultDate,
+                LabStaffName = lt.LabStaff?.Username ?? "Lab Staff"
+            }).ToList()
+        };
+
+        return result;
+    }
+    catch (Exception e)
+    {
+        _logger.LogError("Error at get appointment lab results cause by {}", e.Message);
+        throw;
+    }
+}
 }

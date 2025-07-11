@@ -62,4 +62,30 @@ public class LabController : BaseController
             return HandleException(e, nameof(LabController));
         }
     }
+    [HttpGet("appointments-with-results")]
+    public async Task<IActionResult> GetAppointmentsWithLabResults()
+    {
+        try
+        {
+            var response = await _labTestService.GetAppointmentsWithLabResults();
+            return Ok(ApiResponse<IList<GetAppointmentWithLabRes>>.OkResponse(response, "Get appointments with lab results successfully"));
+        }
+        catch (Exception e)
+        {
+            return HandleException(e, nameof(LabController));
+        }
+    }
+    [HttpGet("appointment/{appointmentId}")]
+    public async Task<IActionResult> GetAppointmentLabResults([FromRoute] int appointmentId)
+    {
+        try
+        {
+            var response = await _labTestService.GetAppointmentLabResults(appointmentId);
+            return Ok(ApiResponse<GetAppointmentLabResultsRes>.OkResponse(response, "Get appointment lab results successfully"));
+        }
+        catch (Exception e)
+        {
+            return HandleException(e, nameof(LabController));
+        }
+    }
 }
