@@ -1,3 +1,4 @@
+using System.Collections;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
@@ -35,13 +36,19 @@ public class LabTestService : ILabTestService
         {
             _logger.LogInformation("Start create lab test for lab test with request {}", request);
             await _unitOfWork.BeginTransactionAsync();
-            var testType = await _typeRepository.GetByIdAsync(request.TestTypeId);
-            var labTest = _mapper.Map<LabTest>(request);
-            labTest.OrderStatus = "Pending";
-            labTest.ReferenceRange = testType.ReferenceRange;
-            labTest.Unit = testType.Unit;
+            var listLabTest = new List<LabTest>();
+            foreach (int typeId in request.TestTypeId)
+            {
+                var testType = await _typeRepository.GetByIdAsync(typeId);
+                var labTest = _mapper.Map<LabTest>(request);
+                labTest.TestTypeId = testType.Id;
+                labTest.OrderStatus = "Pending";
+                labTest.ReferenceRange = testType.ReferenceRange;
+                labTest.Unit = testType.Unit;
+                listLabTest.Add(labTest);
+            }
 
-            await _labRepository.AddAsync(labTest);
+            await _labRepository.AddRangeAsync(listLabTest);
             await _unitOfWork.SaveAsync();
             await _unitOfWork.CommitTransactionAsync();
             _logger.LogInformation("Save lab test successfully");
