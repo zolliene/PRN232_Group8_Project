@@ -1,0 +1,646 @@
+﻿@page "/Doctor/TreatmentRegimen/{appointmentId:int}"
+@model FE_RazorPage.Pages.Doctor.TreatmentRegimen
+@{
+ViewData["Title"] = "Chọn phác đồ điều trị";
+var patient = Model.PatientDetail;
+var regimens = Model.TreatmentRegimens;
+}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<style>
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+    }
+
+    .breadcrumb-nav {
+        color: #1565c0;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .breadcrumb-nav a {
+        color: #1565c0;
+        text-decoration: none;
+        transition: color 0.3s;
+    }
+
+    .breadcrumb-nav a:hover {
+        color: #0d47a1;
+    }
+
+    .back-btn {
+        background-color: #42a5f5;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 25px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .back-btn:hover {
+        background-color: #1e88e5;
+        color: white;
+    }
+
+    .patient-summary {
+        background: linear-gradient(135deg, #42a5f5, #1e88e5);
+        color: white;
+        padding: 20px;
+        border-radius: 15px;
+        margin-bottom: 30px;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .patient-avatar-small {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        font-weight: bold;
+        border: 3px solid rgba(255, 255, 255, 0.3);
+        flex-shrink: 0;
+    }
+
+    .patient-info-summary {
+        flex: 1;
+    }
+
+    .patient-name-summary {
+        font-size: 1.3rem;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    .patient-details-summary {
+        opacity: 0.9;
+        font-size: 0.95rem;
+    }
+
+    .regimen-selection-container {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        overflow: hidden;
+        margin-bottom: 30px;
+    }
+
+    .section-header {
+        background: linear-gradient(135deg, #28a745, #20c997);
+        color: white;
+        padding: 20px;
+        text-align: center;
+    }
+
+    .section-title {
+        font-size: 1.4rem;
+        font-weight: 600;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .section-body {
+        padding: 25px;
+    }
+
+    .regimen-list {
+        display: grid;
+        gap: 20px;
+    }
+
+    .regimen-item {
+        border: 2px solid #e9ecef;
+        border-radius: 10px;
+        padding: 20px;
+        transition: all 0.3s;
+        cursor: pointer;
+        position: relative;
+    }
+
+    .regimen-item:hover {
+        border-color: #28a745;
+        box-shadow: 0 4px 15px rgba(40, 167, 69, 0.1);
+        transform: translateY(-2px);
+    }
+
+    .regimen-item.selected {
+        border-color: #28a745;
+        background-color: #f8fff8;
+        box-shadow: 0 4px 15px rgba(40, 167, 69, 0.2);
+    }
+
+    .regimen-radio {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+        transform: scale(1.3);
+    }
+
+    .regimen-header {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 15px;
+        padding-right: 40px;
+    }
+
+    .regimen-icon {
+        width: 50px;
+        height: 50px;
+        background: linear-gradient(135deg, #28a745, #20c997);
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        flex-shrink: 0;
+    }
+
+    .regimen-info {
+        flex: 1;
+    }
+
+    .regimen-name {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 5px;
+    }
+
+    .regimen-drugs {
+        font-size: 0.9rem;
+        color: #666;
+        font-weight: 500;
+    }
+
+    .regimen-description {
+        color: #666;
+        line-height: 1.5;
+        margin-bottom: 15px;
+    }
+
+    .drug-details {
+        background: #f8f9fa;
+        border-radius: 8px;
+        padding: 15px;
+        margin-top: 10px;
+    }
+
+    .drug-details-title {
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .drug-list {
+        display: grid;
+        gap: 8px;
+    }
+
+    .drug-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 12px;
+        background: white;
+        border-radius: 5px;
+        border-left: 3px solid #28a745;
+    }
+
+    .drug-name {
+        font-weight: 500;
+        color: #333;
+    }
+
+    .drug-dosage {
+        font-size: 0.85rem;
+        color: #666;
+        font-style: italic;
+    }
+
+    .custom-notes-section {
+        margin-top: 30px;
+        padding: 20px;
+        background: #f8f9fa;
+        border-radius: 10px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-label {
+        display: block;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 8px;
+        font-size: 1rem;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 12px;
+        border: 2px solid #e9ecef;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: border-color 0.3s;
+        font-family: inherit;
+        resize: vertical;
+        box-sizing: border-box;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: #28a745;
+        box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.1);
+    }
+
+    .submit-section {
+        padding: 25px 30px;
+        background: #f8f9fa;
+        text-align: center;
+        border-top: 1px solid #e9ecef;
+    }
+
+    .submit-btn {
+        background-color: #28a745;
+        color: white;
+        border: none;
+        padding: 12px 30px;
+        border-radius: 25px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-size: 1rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-right: 15px;
+    }
+
+    .submit-btn:hover {
+        background-color: #218838;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+
+    .submit-btn:disabled {
+        background-color: #6c757d;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+    }
+
+    .cancel-btn {
+        background-color: #6c757d;
+        color: white;
+        border: none;
+        padding: 12px 30px;
+        border-radius: 25px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-size: 1rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        text-decoration: none;
+    }
+
+    .cancel-btn:hover {
+        background-color: #5a6268;
+        color: white;
+    }
+
+    .alert {
+        padding: 12px 16px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        border: 1px solid transparent;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .alert-success {
+        background-color: #d4edda;
+        border-color: #c3e6cb;
+        color: #155724;
+    }
+
+    .alert-danger {
+        background-color: #f8d7da;
+        border-color: #f5c6cb;
+        color: #721c24;
+    }
+
+    .selected-regimen-info {
+        background: linear-gradient(135deg, #d4edda, #c3e6cb);
+        border: 1px solid #28a745;
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 20px;
+        display: none;
+    }
+
+    .selected-regimen-info.show {
+        display: block;
+    }
+
+    .selected-regimen-name {
+        font-weight: 600;
+        color: #155724;
+        margin-bottom: 5px;
+    }
+
+    .selected-regimen-drugs {
+        color: #155724;
+        font-size: 0.9rem;
+    }
+</style>
+
+<div class="container">
+    <div class="page-header">
+        <div class="breadcrumb-nav">
+            <a asp-page="/Doctor/PatientList">
+                <i class="fas fa-list"></i> Danh sách bệnh nhân
+            </a>
+            <span>></span>
+            <a asp-page="/Doctor/LabResults">
+                <i class="fas fa-flask"></i> Kết quả xét nghiệm
+            </a>
+            <span>></span>
+            <span>Chọn phác đồ điều trị</span>
+        </div>
+        <a asp-page="/Doctor/LabResults" class="back-btn">
+            <i class="fas fa-arrow-left"></i>
+            Quay lại
+        </a>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+    <div class="alert alert-success">
+        <i class="fas fa-check-circle"></i> @TempData["SuccessMessage"]
+    </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+    <div class="alert alert-danger">
+        <i class="fas fa-exclamation-circle"></i> @TempData["ErrorMessage"]
+    </div>
+    }
+
+    @if (patient != null)
+    {
+    <!-- Patient Summary -->
+    <div class="patient-summary">
+        <div class="patient-avatar-small">
+            @patient.Name.Split(' ').Last().Substring(0, 1).ToUpper()
+        </div>
+        <div class="patient-info-summary">
+            <div class="patient-name-summary">@patient.Name</div>
+            <div class="patient-details-summary">
+                ID: @patient.InsuranceNumber | @patient.Phone | @patient.Dob.ToString("dd/MM/yyyy") | @(patient.Gender == "male" ? "Nam" : "Nữ")
+            </div>
+        </div>
+    </div>
+
+    <!-- Regimen Selection Form -->
+    <form method="post" asp-page-handler="CreatePatientRegimen">
+        <input type="hidden" asp-for="AppointmentId"/>
+
+        <div class="regimen-selection-container">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-pills"></i>
+                    Chọn phác đồ điều trị
+                </h2>
+            </div>
+            <div class="section-body">
+                <div class="selected-regimen-info" id="selectedRegimenInfo">
+                    <div class="selected-regimen-name" id="selectedRegimenName"></div>
+                    <div class="selected-regimen-drugs" id="selectedRegimenDrugs"></div>
+                </div>
+
+                <div class="regimen-list">
+                    @if (regimens != null && regimens.Any())
+                    {
+                    @foreach (var regimen in regimens)
+                    {
+                    <div class="regimen-item" data-regimen-id="@regimen.Id" data-regimen-name="@regimen.RegimenName" data-regimen-drugs="@regimen.Drugs">
+                        <input type="radio"
+                               class="regimen-radio"
+                               name="SelectedRegimenId"
+                               value="@regimen.Id"
+                               id="regimen_@regimen.Id" />
+
+                        <div class="regimen-header">
+                            <div class="regimen-icon">
+                                <i class="fas fa-capsules"></i>
+                            </div>
+                            <div class="regimen-info">
+                                <div class="regimen-name">@regimen.RegimenName</div>
+                                <div class="regimen-drugs">@regimen.Drugs</div>
+                            </div>
+                        </div>
+
+                        <div class="regimen-description">
+                            @regimen.Description
+                        </div>
+
+                        @if (regimen.RegimenDrugs.Any())
+                        {
+                        <div class="drug-details">
+                            <div class="drug-details-title">
+                                <i class="fas fa-list"></i>
+                                Chi tiết thuốc:
+                            </div>
+                            <div class="drug-list">
+                                @foreach (var drug in regimen.RegimenDrugs)
+                                {
+                                <div class="drug-item">
+                                    <span class="drug-name">@drug.DrugName</span>
+                                    <span class="drug-dosage">@drug.Dose - @drug.Frequency</span>
+                                </div>
+                                }
+                            </div>
+                        </div>
+                        }
+                    </div>
+                    }
+                    }
+                    else
+                    {
+                    <div style="text-align: center; padding: 40px; color: #666;">
+                        <i class="fas fa-pills" style="font-size: 3rem; margin-bottom: 15px; color: #ccc;"></i>
+                        <h4>Không có phác đồ điều trị</h4>
+                        <p>Hiện tại không có phác đồ điều trị nào khả dụng.</p>
+                    </div>
+                    }
+                </div>
+
+                <!-- Custom Notes Section -->
+                <div class="custom-notes-section">
+                    <div class="form-group">
+                        <label class="form-label" asp-for="CustomNotes">
+                            <i class="fas fa-sticky-note"></i> Ghi chú tùy chỉnh (tuỳ chọn)
+                        </label>
+                        <textarea
+                            asp-for="CustomNotes"
+                            class="form-control"
+                            placeholder="Nhập ghi chú về phác đồ điều trị, chỉ định đặc biệt, lưu ý cho bệnh nhân..."
+                            rows="4"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Submit Section -->
+            <div class="submit-section">
+                <button type="submit" class="submit-btn" id="submitBtn" disabled>
+                    <i class="fas fa-check"></i>
+                    Chọn phác đồ này
+                </button>
+                <a asp-page="/Doctor/LabResults" class="cancel-btn">
+                    <i class="fas fa-times"></i>
+                    Hủy bỏ
+                </a>
+            </div>
+        </div>
+    </form>
+    }
+    else
+    {
+    <div class="regimen-selection-container">
+        <div style="text-align: center; padding: 60px 20px; color: #666;">
+            <i class="fas fa-user-times" style="font-size: 4rem; margin-bottom: 20px; color: #ccc;"></i>
+            <h3>Không tìm thấy thông tin bệnh nhân</h3>
+            <p>Vui lòng kiểm tra lại thông tin hoặc quay lại danh sách kết quả xét nghiệm.</p>
+            <a asp-page="/Doctor/LabResults" class="back-btn">
+                <i class="fas fa-arrow-left"></i>
+                Quay lại danh sách
+            </a>
+        </div>
+    </div>
+    }
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const regimenItems = document.querySelectorAll('.regimen-item');
+        const regimenRadios = document.querySelectorAll('.regimen-radio');
+        const submitBtn = document.getElementById('submitBtn');
+        const selectedRegimenInfo = document.getElementById('selectedRegimenInfo');
+        const selectedRegimenName = document.getElementById('selectedRegimenName');
+        const selectedRegimenDrugs = document.getElementById('selectedRegimenDrugs');
+
+        // Handle regimen item clicks
+        regimenItems.forEach(item => {
+            item.addEventListener('click', function(e) {
+                if (e.target.type !== 'radio') {
+                    const radio = this.querySelector('.regimen-radio');
+                    if (radio) {
+                        radio.checked = true;
+                        updateSelection();
+                    }
+                }
+            });
+        });
+
+        // Handle radio button changes
+        regimenRadios.forEach(radio => {
+            radio.addEventListener('change', updateSelection);
+        });
+
+        function updateSelection() {
+            // Remove selected class from all items
+            regimenItems.forEach(item => item.classList.remove('selected'));
+
+            // Find checked radio
+            const checkedRadio = document.querySelector('.regimen-radio:checked');
+
+            if (checkedRadio) {
+                // Add selected class to parent item
+                const selectedItem = checkedRadio.closest('.regimen-item');
+                selectedItem.classList.add('selected');
+
+                // Enable submit button
+                submitBtn.disabled = false;
+
+                // Show selected regimen info
+                const regimenName = selectedItem.dataset.regimenName;
+                const regimenDrugs = selectedItem.dataset.regimenDrugs;
+
+                selectedRegimenName.textContent = `Đã chọn: ${regimenName}`;
+                selectedRegimenDrugs.textContent = `Thuốc: ${regimenDrugs}`;
+                selectedRegimenInfo.classList.add('show');
+
+                // Scroll to selected info
+                selectedRegimenInfo.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'nearest'
+                });
+            } else {
+                // Disable submit button
+                submitBtn.disabled = true;
+                selectedRegimenInfo.classList.remove('show');
+            }
+        }
+
+        // Add animation for regimen items
+        regimenItems.forEach((item, index) => {
+            setTimeout(() => {
+                item.style.opacity = '0';
+                item.style.transform = 'translateY(20px)';
+                item.style.transition = 'all 0.5s ease';
+                setTimeout(() => {
+                    item.style.opacity = '1';
+                    item.style.transform = 'translateY(0)';
+                }, 50);
+            }, index * 100);
+        });
+
+        // Form submission confirmation
+        const form = document.querySelector('form');
+        form.addEventListener('submit', function(e) {
+            const checkedRadio = document.querySelector('.regimen-radio:checked');
+            if (!checkedRadio) {
+                e.preventDefault();
+                alert('Vui lòng chọn một phác đồ điều trị!');
+                return;
+            }
+
+            const regimenName = checkedRadio.closest('.regimen-item').dataset.regimenName;
+            if (!confirm(`Xác nhận chọn phác đồ "${regimenName}" cho bệnh nhân này?`)) {
+                e.preventDefault();
+            }
+        });
+    });
+</script>
