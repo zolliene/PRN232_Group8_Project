@@ -22,8 +22,9 @@ public class MappingProfile : Profile
         CreateMap<CreateExaminationReq, Examination>();
 
         CreateMap<TestType, GetTestTypeRes>();
-
-        CreateMap<CreateLabTestReq, LabTest>();
+        
+        CreateMap<CreateLabTestReq, LabTest>()
+            .ForMember(dest => dest.TestTypeId, opt => opt.Ignore());
 
         CreateMap<LabTest, GetLabResultRes>()
             .ForMember(dest => dest.PatientName, opt => opt.MapFrom(src => 
