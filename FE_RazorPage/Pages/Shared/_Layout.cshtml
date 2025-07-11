@@ -13,13 +13,11 @@
                 },
         ["guest"] = new List<(string, string)> {
                 ("HomePage", "/Index"),
-               
-                ("Appointment", "/Index")
-                 },
+                                },
         ["patient"] = new List<(string, string)> {
                 ("HomePage", "/Index"),
-                ("Appointment", "/Index"),
-                ("MedicalHistory", "/Index")
+                ("Appointment", "/Appointment/CreateAppointment"),
+                ("MedicalHistory", "/Appointment/History")
                 },
         ["doctor"] = new List<(string, string)> {
                 ("Patient List", "/Doctor/PatientList"),
