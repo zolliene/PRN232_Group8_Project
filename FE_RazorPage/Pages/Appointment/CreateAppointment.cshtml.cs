@@ -24,11 +24,17 @@ public class CreateAppointmentModel : PageModel
     public List<GetDoctorRes> DoctorDisplay { get; set; } = new();
 
 
-    public async Task OnGetAsync()
+    public async Task<IActionResult> OnGetAsync()
     {
+        var token = HttpContext.Session.GetString("jwtToken");
+        if (string.IsNullOrEmpty(token))
+        {
+            TempData["Warning"] = "Bạn phải đăng nhập để đặt lịch khám.";
+            
+        }
         var client = _httpClientFactory.CreateClient();
         var response = await client.GetAsync("https://localhost:7022/api/Doctorlist");
-
+       
         if (response.IsSuccessStatusCode)
         {
             var json = await response.Content.ReadAsStringAsync();
@@ -36,11 +42,7 @@ public class CreateAppointmentModel : PageModel
             var result = JsonDocument.Parse(json);
             var doctorList = result.RootElement.GetProperty("Data").EnumerateArray();
 
-            //DoctorOptions = doctorList.Select(d => new SelectListItem
-            //{
-            //    Value = d.GetProperty("id").ToString(),
-            //    Text = d.GetProperty("fullName").ToString()
-            //}).ToList();
+          
             DoctorOptions = doctorList.Select(d => new SelectListItem
             {
                 Value = d.GetProperty("Id").ToString(),
@@ -54,31 +56,11 @@ public class CreateAppointmentModel : PageModel
                 Qualification = d.GetProperty("Qualification").ToString()
             }).ToList();
         }
-       
+        return Page();
 
     }
 
-    //public async Task<IActionResult> OnPostAsync()
-    //{
-    //    if (!ModelState.IsValid) return Page();
-
-    //    var client = _httpClientFactory.CreateClient();
-
-    //    var content = new StringContent(JsonSerializer.Serialize(Appointment), Encoding.UTF8, "application/json");
-
-    //    var response = await client.PostAsync("https://localhost:7022/api/Booking", content);
-
-    //    if (response.IsSuccessStatusCode)
-    //    {
-    //        TempData["Success"] = "Đặt lịch thành công!";
-    //        Success = true;
-    //        return Page();
-
-    //    }
-
-    //    TempData["Error"] = "Lỗi khi đặt lịch.";
-    //    return Page();
-    //}
+  
     public async Task<IActionResult> OnPostAsync()
     {
         if (!ModelState.IsValid) return Page();
@@ -89,9 +71,12 @@ public class CreateAppointmentModel : PageModel
         if (!string.IsNullOrEmpty(token))
         {
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        }else
+        {
+            return RedirectToPage("/Auth/Login");
         }
 
-        var content = new StringContent(JsonSerializer.Serialize(Appointment), Encoding.UTF8, "application/json");
+            var content = new StringContent(JsonSerializer.Serialize(Appointment), Encoding.UTF8, "application/json");
         var response = await client.PostAsync("https://localhost:7022/api/Booking", content);
 
         if (response.IsSuccessStatusCode)

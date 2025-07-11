@@ -12,12 +12,14 @@
                 ("Edit Result", "/Index")
                 },
         ["guest"] = new List<(string, string)> {
-                ("HomePage", "/Index"),
+                ("Trang chủ", "/Index"),
+                ("Đặt lịch", "/Appointment/CreateAppointment"),
                                 },
         ["patient"] = new List<(string, string)> {
-                ("HomePage", "/Index"),
-                ("Appointment", "/Appointment/CreateAppointment"),
-                ("MedicalHistory", "/Appointment/History")
+                ("Trang Chủ", "/Index"),
+                ("Đặt lịch", "/Appointment/CreateAppointment"),
+                ("Lịch sử khám", "/Appointment/History"),
+                ("Thông tin cá nhân", "/Patient/Profile")
                 },
         ["doctor"] = new List<(string, string)> {
                 ("Patient List", "/Doctor/PatientList"),
@@ -39,9 +41,11 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/FE_RazorPage.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
+
 </head>
 <body>
-
+    @if (!(ViewData["HideHeader"] as bool? ?? false)){
     <header>
         <style>
             .custom-btn {
@@ -139,6 +143,7 @@
             </div>
         </nav>
     </header>
+    }
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
@@ -156,5 +161,6 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
 
     @await RenderSectionAsync("Scripts", required: false)
+    
 </body>
 </html>

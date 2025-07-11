@@ -121,9 +121,20 @@
 </style>
 
 <div class="main-wrapper">
+ 
     <!-- Form -->
     <div class="form-container">
         <div class="form-title">Đặt lịch khám</div>
+        @if (TempData["Warning"] != null)
+        {
+            <div class="alert alert-warning">
+                <a href="/Auth/Login" class="text-decoration-none text-dark fw-bold">
+                    @TempData["Warning"] 
+                </a>
+            </div>
+        }
+
+
 
         <form method="post">
             <div class="form-group">
