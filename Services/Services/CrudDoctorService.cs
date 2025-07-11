@@ -1,4 +1,5 @@
-﻿using Repositories.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using Repositories.Models;
 using Repositories.UnitOfWork;
 using Services.Dto;
 using Services.Interfaces;
@@ -126,16 +127,27 @@ namespace Services.Services
 
         public async Task<bool> DeleteDoctorAsync(int id)
         {
-            var doctor = await _unitOfWork.DoctorRepository.GetByIdAsync(id);
+            // Lấy doctor kèm theo User
+            var doctorList = await _unitOfWork.DoctorRepository.GetAllAsync(q =>
+                q.Include(d => d.User).Where(d => d.Id == id));
 
-            if (doctor == null)
-                return false;
+            var doctor = doctorList.FirstOrDefault();
+            if (doctor == null) return false;
 
+            // Nếu có User thì xóa luôn
+            if (doctor.User != null)
+            {
+                _unitOfWork.UserRepository.Remove(doctor.User);
+            }
+
+            // Xóa bác sĩ
             _unitOfWork.DoctorRepository.Remove(doctor);
+
             await _unitOfWork.SaveAsync();
             return true;
         }
 
-     
+
+
     }
 }

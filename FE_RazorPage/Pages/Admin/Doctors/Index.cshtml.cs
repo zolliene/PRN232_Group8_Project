@@ -1,20 +1,15 @@
-﻿using FE_RazorPage.Models;
-using Microsoft.AspNetCore.Http;
+using FE_RazorPage.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.Data;
-using System.Text;
 using System.Text.Json;
-using System.Net.Http.Json;
 
 namespace FE_RazorPage.Pages.Admin.Doctors
 {
-
-    public class DoctorIndexModel : PageModel
+    public class IndexModel : PageModel
     {
         private readonly HttpClient _httpClient;
 
-        public DoctorIndexModel(IHttpClientFactory factory)
+        public IndexModel(IHttpClientFactory factory)
         {
             _httpClient = factory.CreateClient("MyApi");
         }
@@ -23,7 +18,7 @@ namespace FE_RazorPage.Pages.Admin.Doctors
 
         public async Task OnGetAsync()
         {
-            var response = await _httpClient.GetAsync("api/doctoraccount");
+            var response = await _httpClient.GetAsync("api/DoctorAccount");
             if (response.IsSuccessStatusCode)
             {
                 var json = await response.Content.ReadAsStringAsync();
@@ -34,5 +29,4 @@ namespace FE_RazorPage.Pages.Admin.Doctors
             }
         }
     }
-
 }

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Repositories.Models;
 using Repositories.UnitOfWork;
 using Services.Dto;
@@ -100,15 +101,28 @@ namespace Services.Services
         }
 
         // ❌ Xóa thuốc
+
         public async Task<bool> DeleteDrugAsync(int id)
         {
-            var drug = await _unitOfWork.ArvDrugRepository.GetByIdAsync(id);
+            // Lấy thuốc kèm theo các RegimenDrugs
+            var drugList = await _unitOfWork.ArvDrugRepository.GetAllAsync(q =>
+                q.Include(d => d.RegimenDrugs).Where(d => d.Id == id));
+
+            var drug = drugList.FirstOrDefault();
             if (drug == null) return false;
 
+            // Xóa các liên kết trung gian
+            if (drug.RegimenDrugs.Any())
+            {
+                _unitOfWork.RegimenDrugRepository.RemoveRange(drug.RegimenDrugs);
+            }
+
+            // Xóa thuốc
             _unitOfWork.ArvDrugRepository.Remove(drug);
             await _unitOfWork.SaveAsync();
             return true;
         }
+
 
         // 🗂️ Lấy tất cả nhóm thuốc
         public async Task<List<ArvDrugGroupDTO>> GetAllGroupsAsync()

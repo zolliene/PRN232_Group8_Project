@@ -1,5 +1,5 @@
 ﻿@page
-@model FE_RazorPage.Pages.Admin.Doctors.DoctorIndexModel
+@model FE_RazorPage.Pages.Admin.Doctors.IndexModel
 @{
     ViewData["Title"] = "Danh sách bác sĩ";
 }
@@ -37,6 +37,7 @@
 
 
                     <a asp-page="Delete" asp-route-id="@doctor.Id" class="btn btn-sm btn-danger">Xóa</a>
+
                 </td>
             </tr>
         }

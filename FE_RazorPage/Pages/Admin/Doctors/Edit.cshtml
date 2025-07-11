@@ -1,40 +1,37 @@
 ﻿@page "{id:int}"
 @model FE_RazorPage.Pages.Admin.Doctors.EditModel
 @{
-    ViewData["Title"] = "Cập Nhật thông tin bác sĩ";
+    ViewData["Title"] = "Chỉnh sửa bác sĩ";
 }
-<h2>Thêm bác sĩ</h2>
+
+<h2>Chỉnh sửa thông tin bác sĩ</h2>
 
 <form method="post">
-    <input type="hidden" asp-for="Doctor.Id" />
-
-    <div class="mb-3">
+    <div class="form-group">
         <label>Tên</label>
         <input asp-for="Doctor.Name" class="form-control" />
     </div>
-    <div class="mb-3">
+    <div class="form-group">
         <label>Email</label>
         <input asp-for="Doctor.Email" class="form-control" />
     </div>
-    <div class="mb-3">
+    <div class="form-group">
         <label>Chuyên môn</label>
         <input asp-for="Doctor.Qualification" class="form-control" />
     </div>
-    <div class="mb-3">
+    <div class="form-group">
         <label>Giấy phép</label>
         <input asp-for="Doctor.LicenseNumber" class="form-control" />
     </div>
-    <div class="mb-3">
+    <div class="form-group">
         <label>Ngày cấp</label>
-        <input asp-for="Doctor.DateOfLicense" type="date" class="form-control" />
+        <input asp-for="Doctor.DateOfLicense" class="form-control" type="date" />
     </div>
-    <div class="mb-3">
+    <div class="form-group">
         <label>Hạn giấy phép</label>
-        <input asp-for="Doctor.LicenseExpiryDate" type="date" class="form-control" />
+        <input asp-for="Doctor.LicenseExpiryDate" class="form-control" type="date" />
     </div>
-    <button type="submit" class="btn btn-success">Lưu</button>
-    <a asp-page="Index" class="btn btn-secondary">Hủy</a>
+
+    <button type="submit" class="btn btn-primary mt-3">Cập nhật</button>
+    <a asp-page="Index" class="btn btn-secondary mt-3">Hủy</a>
 </form>
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-}

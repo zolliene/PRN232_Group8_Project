@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Repositories.Models;
 using Repositories.UnitOfWork;
 using Services.Dto;
@@ -76,13 +77,25 @@ namespace Services.Services
         // ❌ Xóa phác đồ
         public async Task<bool> DeleteRegimenAsync(int id)
         {
-            var regimen = await _unitOfWork.TreatmentRegimensMasterRepository.GetByIdAsync(id);
+            // Lấy phác đồ kèm theo các RegimenDrugs
+            var regimenList = await _unitOfWork.TreatmentRegimensMasterRepository.GetAllAsync(q =>
+                q.Include(r => r.RegimenDrugs).Where(r => r.Id == id));
+
+            var regimen = regimenList.FirstOrDefault();
             if (regimen == null) return false;
 
+            // Xóa các liên kết trung gian
+            if (regimen.RegimenDrugs.Any())
+            {
+                _unitOfWork.RegimenDrugRepository.RemoveRange(regimen.RegimenDrugs);
+            }
+
+            // Xóa phác đồ
             _unitOfWork.TreatmentRegimensMasterRepository.Remove(regimen);
             await _unitOfWork.SaveAsync();
             return true;
         }
+
 
         // 📋 Lấy danh sách thuốc trong phác đồ
         public async Task<List<RegimenDrugDetailDTO>> GetDrugsByRegimenIdAsync(int regimenId)

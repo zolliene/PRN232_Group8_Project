@@ -1,4 +1,6 @@
-﻿namespace FE_RazorPage.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace FE_RazorPage.Models
 {
     public class GetDoctorModel
     {
@@ -20,6 +22,8 @@
     public class CreateDoctorModel
     {
         public string Name { get; set; } = null!;
+        [Required]
+        [RegularExpression(@"^[\w\.-]+@gmail\.com$", ErrorMessage = "Email phải có định dạng hợp lệ và kết thúc bằng @gmail.com")]
         public string Email { get; set; } = null!;
         public string LicenseNumber { get; set; } = null!;
         public string Qualification { get; set; } = null!;
@@ -28,7 +32,7 @@
     }
     public class UpdateDoctorModel
     {
-        public int Id { get; set; }
+        public int Id { get; set; } 
         public string Name { get; set; } = null!;
         public string Email { get; set; } = null!;
         public string LicenseNumber { get; set; } = null!;

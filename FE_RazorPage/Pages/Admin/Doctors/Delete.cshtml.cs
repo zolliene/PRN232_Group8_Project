@@ -20,23 +20,26 @@ namespace FE_RazorPage.Pages.Admin.Doctors
         public async Task<IActionResult> OnGetAsync(int id)
         {
             var response = await _httpClient.GetAsync($"api/DoctorAccount/{id}");
-            if (!response.IsSuccessStatusCode) return RedirectToPage("Index");
+            if (!response.IsSuccessStatusCode) return NotFound();
 
-            var json = await response.Content.ReadAsStringAsync();
-            Doctor = JsonSerializer.Deserialize<GetDoctorModel>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true })!;
+            var doctor = await response.Content.ReadFromJsonAsync<GetDoctorModel>();
+            if (doctor == null) return NotFound();
+
+            Doctor = doctor;
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync(int id)
+        public async Task<IActionResult> OnPostAsync()
         {
             var response = await _httpClient.DeleteAsync($"api/DoctorAccount/{Doctor.Id}");
-
             if (response.IsSuccessStatusCode)
+            {
                 return RedirectToPage("Index");
+            }
 
             ModelState.AddModelError(string.Empty, "Xóa thất bại.");
             return Page();
         }
     }
-
 }
+
