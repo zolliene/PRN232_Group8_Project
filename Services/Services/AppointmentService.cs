@@ -1,4 +1,4 @@
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -117,17 +117,20 @@ public class AppointmentService : IAppointmentService
         }
     }
     //======================================================================================
-    public async Task CreateAppointment(CreateAppointmentReq request)
+    public async Task CreateAppointment(CreateAppointmentReq request, int userId)
     {
+        var patient = await _unitOfWork.PatientRepository.FirstOrDefaultAsync(p => p.UserId == userId);
+        if (patient == null)
+            throw new KeyNotFoundException("Patient not found for this user.");
         var doctorExists = await _unitOfWork.DoctorRepository.ExistsAsync(d => d.Id == request.DoctorId);
-        var patientExists = await _unitOfWork.PatientRepository.ExistsAsync(p => p.Id == request.PatientId);
+        //var patientExists = await _unitOfWork.PatientRepository.ExistsAsync(p => p.Id == request.PatientId);
 
-        if (!doctorExists || !patientExists)
+        if (!doctorExists)
             throw new ArgumentException("Doctor or Patient not found.");
 
         var appointment = new Appointment
         {
-            PatientId = request.PatientId,
+            PatientId = patient.Id,
             DoctorId = request.DoctorId,
             Date = request.Date,
             Session = request.Session,
@@ -140,5 +143,36 @@ public class AppointmentService : IAppointmentService
         await _unitOfWork.AppointmentRepository.AddAsync(appointment);
         await _unitOfWork.SaveAsync();
     }
+    public async Task<List<GetPatientExaminationHistoryRes>> GetPatientExaminationHistory(int userId)
+    {
+        // Tìm Patient theo UserId
+        var patient = await _unitOfWork.PatientRepository.FirstOrDefaultAsync(p => p.UserId == userId);
+        if (patient == null)
+            throw new KeyNotFoundException("Patient not found for this user.");
+
+        // Lấy danh sách lịch hẹn theo PatientId
+        var appointments = await _appointmentRepository.FindIncludeAsync(
+            a => a.PatientId == patient.Id &&  (a.Status.ToLower() == "success"
+                 || a.Status.ToLower() == "booked"),
+            a => a.Doctor!.User,
+            a => a.Examination
+        );
+
+        // Map kết quả sang DTO
+        var result = appointments.Select(a => new GetPatientExaminationHistoryRes
+        {
+            AppointmentId = a.Id,
+            Date = a.Date,
+            Session = a.Session,
+            Status = a.Status,
+            CheckInTime = a.CheckInTime,
+            DoctorName = a.Doctor?.User?.FullName,
+            Note = a.Note,
+            ClinicalData = a.Examination?.ClinicalData
+        }).ToList();
+
+        return result;
+    }
+
 
 }

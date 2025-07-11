@@ -58,14 +58,40 @@ public class CreateAppointmentModel : PageModel
 
     }
 
+    //public async Task<IActionResult> OnPostAsync()
+    //{
+    //    if (!ModelState.IsValid) return Page();
+
+    //    var client = _httpClientFactory.CreateClient();
+
+    //    var content = new StringContent(JsonSerializer.Serialize(Appointment), Encoding.UTF8, "application/json");
+
+    //    var response = await client.PostAsync("https://localhost:7022/api/Booking", content);
+
+    //    if (response.IsSuccessStatusCode)
+    //    {
+    //        TempData["Success"] = "Đặt lịch thành công!";
+    //        Success = true;
+    //        return Page();
+
+    //    }
+
+    //    TempData["Error"] = "Lỗi khi đặt lịch.";
+    //    return Page();
+    //}
     public async Task<IActionResult> OnPostAsync()
     {
         if (!ModelState.IsValid) return Page();
 
         var client = _httpClientFactory.CreateClient();
 
-        var content = new StringContent(JsonSerializer.Serialize(Appointment), Encoding.UTF8, "application/json");
+        var token = HttpContext.Session.GetString("jwtToken");
+        if (!string.IsNullOrEmpty(token))
+        {
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        }
 
+        var content = new StringContent(JsonSerializer.Serialize(Appointment), Encoding.UTF8, "application/json");
         var response = await client.PostAsync("https://localhost:7022/api/Booking", content);
 
         if (response.IsSuccessStatusCode)
@@ -73,16 +99,16 @@ public class CreateAppointmentModel : PageModel
             TempData["Success"] = "Đặt lịch thành công!";
             Success = true;
             return Page();
-
         }
 
         TempData["Error"] = "Lỗi khi đặt lịch.";
         return Page();
     }
 
+
     public class CreateAppointmentRequest
     {
-        public int PatientId { get; set; } = 1; // hardcode test, sau này lấy từ session
+       
         public int DoctorId { get; set; }
         public DateOnly Date { get; set; }
         public string Session { get; set; } = "morning";

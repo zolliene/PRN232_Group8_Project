@@ -8,7 +8,6 @@ namespace Services.Dto.request
 {
     public class CreateAppointmentReq
     {
-        public int PatientId { get; set; }
         public int DoctorId { get; set; }
         public DateOnly Date { get; set; }
         public string Session { get; set; } = null!;

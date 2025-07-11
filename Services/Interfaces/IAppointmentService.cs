@@ -1,3 +1,4 @@
+using Repositories.Models;
 using Services.Dto.request;
 using Services.Dto.response;
 
@@ -10,6 +11,8 @@ public interface IAppointmentService
      Task UpdateAppointment(int appointmentId);
 
      Task<GetPatientDetail> GetAppointmentById(int appointmentId);
-    Task CreateAppointment(CreateAppointmentReq request);
+    Task CreateAppointment(CreateAppointmentReq request,int userId);
+    Task<List<GetPatientExaminationHistoryRes>> GetPatientExaminationHistory(int patientId);
+
 
 }

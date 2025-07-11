@@ -1,108 +1,4 @@
-﻿@* @page
-@model CreateAppointmentModel
-@{
-    ViewData["Title"] = "Đặt lịch khám";
-}
-
-<style>
-    body {
-        background-color: #f0f8ff; /* xanh nhạt gần giống header */
-    }
-
-    .form-container {
-        background-color: white;
-        max-width: 500px;
-        margin: 30px auto;
-        padding: 30px;
-        border-radius: 12px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    }
-
-    .form-title {
-        text-align: center;
-        font-weight: bold;
-        color: #007bff;
-        margin-bottom: 20px;
-        font-size: 1.5rem;
-    }
-
-    .form-group {
-        margin-bottom: 15px;
-    }
-
-    label {
-        font-weight: 500;
-        margin-bottom: 5px;
-        display: block;
-    }
-
-    select, input[type="date"], textarea {
-        width: 100%;
-        padding: 8px;
-        border-radius: 6px;
-        border: 1px solid #ccc;
-    }
-
-    button {
-        background-color: #007bff;
-        color: white;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 6px;
-        cursor: pointer;
-    }
-
-        button:hover {
-            background-color: #0056b3;
-        }
-
-    .section-highlight {
-        border: 1px solid #007bff;
-        background-color: #e9f4ff;
-        padding: 15px;
-        border-radius: 8px;
-        margin-bottom: 20px;
-    }
-</style>
-
-<div class="form-container">
-    <div class="form-title">Đặt lịch khám</div>
-
-    <form method="post">
-        <div class="form-group section-highlight">
-            <label>Bác sĩ</label>
-            <select asp-for="Appointment.DoctorId" asp-items="Model.DoctorOptions" required>
-                <option value="">-- Chọn bác sĩ --</option>
-            </select>
-        </div>
-
-        <div class="form-group">
-            <label>Ngày khám</label>
-            <input asp-for="Appointment.Date" type="date"
-                   min="@DateTime.Today.ToString("yyyy-MM-dd")"
-                   max="@DateTime.Today.AddMonths(1).ToString("yyyy-MM-dd")"
-                   required />
-        </div>
-
-        <div class="form-group">
-            <label>Ca khám</label>
-            <select asp-for="Appointment.Session" required>
-                <option value="morning">Sáng</option>
-                <option value="afternoon">Chiều</option>
-            </select>
-        </div>
-
-        <div class="form-group">
-            <label>Ghi chú</label>
-            <textarea asp-for="Appointment.Note" rows="3"></textarea>
-        </div>
-
-        <div style="text-align: center;">
-            <button type="submit">Đặt lịch</button>
-        </div>
-    </form>
-</div>
- *@
+﻿
 @page
 @model CreateAppointmentModel
 @{
@@ -118,7 +14,7 @@
         display: flex;
         justify-content: center;
         padding: 40px;
-        gap: 30px;
+        gap: 50px;
         flex-wrap: wrap;
     }
 
@@ -170,7 +66,7 @@
 
     .info-panel {
         background-color: white;
-        width: 400px;
+        width: 450px;
         padding: 25px;
         border-radius: 12px;
         box-shadow: 0 4px 12px rgba(0,0,0,0.1);
@@ -264,18 +160,19 @@
         </form>
     </div>
 
+  
     <!-- Thông tin bên phải -->
     <div class="info-panel">
-        <h3>Thông tin cho bệnh nhân HIV</h3>
+        <h3>Thông tin dành cho bệnh nhân HIV</h3>
         <p>
-            Người nhiễm HIV nên khám định kỳ để theo dõi sức khỏe và hiệu quả điều trị.
-            Hãy duy trì dùng thuốc đúng giờ, đúng liều.
-            Đặt lịch hẹn giúp bệnh viện chuẩn bị tốt nhất cho quá trình chăm sóc của bạn.
+            - Việc tái khám định kỳ giúp theo dõi tình trạng miễn dịch và phát hiện sớm các biến chứng. <br />
+            - Vui lòng tuân thủ liệu trình điều trị ARV đúng liều, đúng giờ để đảm bảo hiệu quả. <br />
+            - Đặt lịch hẹn trước giúp bác sĩ chuẩn bị tốt hơn cho quá trình khám và điều trị của bạn.
         </p>
 
         <div class="doctor-list">
-            <h3>Danh sách bác sĩ</h3>
-            @foreach (var doctor in Model.DoctorDisplay)
+            <h3>Những bác sĩ ưu tú</h3>
+            @foreach (var doctor in Model.DoctorDisplay.Take(4))
             {
                 <div class="doctor-card">
                     <div class="avatar">
@@ -288,8 +185,8 @@
                 </div>
             }
         </div>
-
     </div>
+
 </div>
 @if (Model.Success)
 {

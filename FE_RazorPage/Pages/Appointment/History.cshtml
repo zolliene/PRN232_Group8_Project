@@ -1,0 +1,112 @@
+﻿
+@page
+@model HistoryModel
+@{
+    ViewData["Title"] = "Lịch sử khám bệnh";
+}
+
+<style>
+    body {
+        background-color: #f0f8ff;
+    }
+
+    .table-container {
+        overflow: hidden;
+        border-radius: 12px;
+        box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+    }
+
+        .table-container .table {
+            margin-bottom: 0;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .table-container thead th {
+            background-color: #3b82f6;
+            color: white;
+        }
+
+    .pagination .page-link {
+        color: #3b82f6;
+        border: 1px solid #3b82f6;
+        margin: 0 3px;
+    }
+
+        .pagination .page-link:hover {
+            background-color: #3b82f6;
+            color: white;
+        }
+
+    .pagination .active .page-link {
+        background-color: #1e40af;
+        color: white;
+        border-color: #1e40af;
+    }
+</style>
+
+<div class="container mt-5">
+    <div class="card shadow-sm table-container">
+        <div class="card-body p-0">
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th scope="col">Ngày khám</th>
+                        <th scope="col">Buổi</th>
+                        <th scope="col">Bác sĩ</th>
+                        <th scope="col">Ghi chú</th>
+                        <th scope="col">Tình trạng</th>
+                        <th scope="col">Dữ liệu lâm sàng</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Histories.OrderByDescending(h => h.Date))
+                    {
+                        <tr>
+                            <td>@(item.Date?.ToString("dd/MM/yyyy"))</td>
+                            <td>
+                                @(item.Session?.ToLower() == "morning" ? "Sáng" : (item.Session?.ToLower() == "afternoon" ? "Chiều" : "Không rõ"))
+                            </td>
+                            <td>@item.DoctorName</td>
+                            <td>@item.Note</td>
+                            <td>
+                                @if (item.Status?.ToLower() == "success")
+                                {
+                                    <span class="badge bg-success">Thành công</span>
+                                }
+                                else if (item.Status?.ToLower() == "booked")
+                                {
+                                    <span class="badge bg-warning text-dark">Đã đặt lịch</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary">@item.Status</span>
+                                }
+                            </td>
+                            <td>@item.ClinicalData</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <nav aria-label="Page navigation" class="mt-4">
+        <ul class="pagination justify-content-center">
+            <li class="page-item @(Model.CurrentPage == 1 ? "disabled" : "")">
+                <a class="page-link" href="?CurrentPage=@(Model.CurrentPage - 1)">Prev</a>
+            </li>
+
+            @for (var p = 1; p <= Model.TotalPages; p++)
+            {
+                <li class="page-item @(p == Model.CurrentPage ? "active" : "")">
+                    <a class="page-link" href="?CurrentPage=@p">@p</a>
+                </li>
+            }
+
+            <li class="page-item @(Model.CurrentPage == Model.TotalPages ? "disabled" : "")">
+                <a class="page-link" href="?CurrentPage=@(Model.CurrentPage + 1)">Next</a>
+            </li>
+        </ul>
+    </nav>
+</div>

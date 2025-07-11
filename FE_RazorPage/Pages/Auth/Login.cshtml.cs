@@ -49,6 +49,7 @@ namespace FE_RazorPage.Pages.Login
                     HttpContext.Session.SetString("jwtToken", token ?? "");
                     HttpContext.Session.SetInt32("userId", id);
                     HttpContext.Session.SetString("role", role ?? "guest");
+                    
 
                     // Chuyển về trang Home hoặc Dashboard
                     return RedirectToPage("/Index");
