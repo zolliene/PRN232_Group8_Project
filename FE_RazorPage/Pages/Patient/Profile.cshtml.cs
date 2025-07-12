@@ -47,6 +47,11 @@ public class PatientProfileModel : PageModel
         {
             return RedirectToPage("/Auth/Login");
         }
+        if (!Profile.Email.EndsWith("@gmail.com", StringComparison.OrdinalIgnoreCase))
+        {
+            ModelState.AddModelError(string.Empty, "Email phải có kết thúc bằng @gmail.com");
+            return Page(); // Dừng lại, không gọi API
+        }
 
         var updateRequest = new
         {

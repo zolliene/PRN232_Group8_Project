@@ -1,4 +1,4 @@
-using System.Text;
+﻿using System.Text;
 using System.Text.Json;
 using FE_RazorPage.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -16,6 +16,11 @@ public class RegisterModel : PageModel
 
     public async Task<IActionResult> OnPostAsync()
     {
+        if (!Input.Email.EndsWith("@gmail.com", StringComparison.OrdinalIgnoreCase))
+        {
+            ErrorMessage = "Email phải có kết thúc bằng @gmail.com";
+            return Page(); // Trả về trang hiện tại và hiển thị lỗi
+        }
         var json = JsonSerializer.Serialize(Input);
         var content = new StringContent(json, Encoding.UTF8, "application/json");
 
@@ -29,20 +34,20 @@ public class RegisterModel : PageModel
 
             if (response.IsSuccessStatusCode)
             {
-                SuccessMessage = "??ng k� th�nh c�ng!";
+                SuccessMessage = "Đăng ký thành công!";
                 return Page();
             }
             else
             {
                 using var doc = JsonDocument.Parse(body);
                 var msg = doc.RootElement.GetProperty("message").GetString();
-                ErrorMessage = msg ?? "??ng k� th?t b?i!";
+                ErrorMessage = msg ?? "Đăng ký thất bại";
                 return Page();
             }
         }
         catch (Exception ex)
         {
-            ErrorMessage = "L?i k?t n?i ??n server: " + ex.Message;
+            ErrorMessage = "Lỗi kết nối server " + ex.Message;
             return Page();
         }
     }
