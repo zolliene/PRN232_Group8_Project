@@ -1,5 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.EntityFrameworkCore;
 using Repositories.Models;
+using Services.Dto.request;
 using Services.Dto.response;
 using Services.Interfaces;
 using System;
@@ -95,21 +97,27 @@ namespace Services.Services
 
         }
 
-        public async Task<List<GetLabTestResqV1>> GetAllLabTest(DateTime inpuDate)
+        public async Task<List<GetLabTestResqV1>> GetAllLabTestByDate(DateTime inpuDate)
         {
+            // Tạo khoảng ngày
+            var startDate = inpuDate.Date;
+            var endDate = startDate.AddDays(1);
+
             var labtests = await _context.LabTests
-         .Where(x =>
-             (x.OrderStatus == "pending" || x.OrderStatus == " ")
-             && x.OrderTime.Date == inpuDate.Date)
-         .Include(a => a.Appointment)
-             .ThenInclude(a => a.Examination)
-         .Include(a => a.Appointment)
-             .ThenInclude(a => a.Patient)
-         .Include(a => a.TestType)
-         .ToListAsync();
-            var labTestResponses = labtests.Select(labTest => new GetLabTestResqV1(
+                .Where(x =>
+                    (x.OrderStatus == "pending" || x.OrderStatus == " ") &&
+                    x.OrderTime >= startDate && x.OrderTime < endDate
                 )
-            { Id = labTest.Id,
+                .Include(a => a.Appointment)
+                    .ThenInclude(a => a.Examination)
+                .Include(a => a.Appointment)
+                    .ThenInclude(a => a.Patient)
+                .Include(a => a.TestType)
+                .ToListAsync();
+
+            var labTestResponses = labtests.Select(labTest => new GetLabTestResqV1()
+            {
+                Id = labTest.Id,
                 AppointmentId = labTest.AppointmentId,
                 TestTypeId = labTest.TestTypeId,
                 OrderTime = labTest.OrderTime,
@@ -124,7 +132,45 @@ namespace Services.Services
                 Date = labTest.Appointment.Date,
                 session = labTest.Appointment.Session,
                 patientId = labTest.Appointment.PatientId,
-                FullName = labTest.Appointment.Patient.FirstName +" "+ labTest.Appointment.Patient.LastName,
+                FullName = labTest.Appointment.Patient.FirstName + " " + labTest.Appointment.Patient.LastName,
+                Phone = labTest.Appointment.Patient.Phone,
+                DateOfBirth = labTest.Appointment.Patient.Dob,
+                NameOfTestType = labTest.TestType.Name,
+                UnitOfTestType = labTest.TestType.Unit,
+                ReferenceRangeOfTestType = labTest.TestType.ReferenceRange
+            });
+
+            return labTestResponses.ToList();
+        }
+       
+        public async Task<List<GetLabTestResqV1>> GetAllLabtest()
+        {
+            var labtests = await _context.LabTests
+       .Include(a => a.Appointment)
+           .ThenInclude(a => a.Examination)
+       .Include(a => a.Appointment)
+           .ThenInclude(a => a.Patient)
+       .Include(a => a.TestType)
+       .ToListAsync();
+            var labTestResponses = labtests.Select(labTest => new GetLabTestResqV1(
+                )
+            {
+                Id = labTest.Id,
+                AppointmentId = labTest.AppointmentId,
+                TestTypeId = labTest.TestTypeId,
+                OrderTime = labTest.OrderTime,
+                OrderStatus = labTest.OrderStatus,
+                ResultValue = labTest.ResultValue,
+                Unit = labTest.Unit,
+                ReferenceRange = labTest.ReferenceRange,
+                ResultStatus = labTest.ResultStatus,
+                Comments = labTest.Comments,
+                ResultDate = labTest.ResultDate,
+                LabStaffId = labTest.LabStaffId,
+                Date = labTest.Appointment.Date,
+                session = labTest.Appointment.Session,
+                patientId = labTest.Appointment.PatientId,
+                FullName = labTest.Appointment.Patient.FirstName + " " + labTest.Appointment.Patient.LastName,
                 Phone = labTest.Appointment.Patient.Phone,
                 DateOfBirth = labTest.Appointment.Patient.Dob,
                 NameOfTestType = labTest.TestType.Name,
@@ -135,10 +181,7 @@ namespace Services.Services
             }
             );
             return labTestResponses.ToList();
-
         }
-
-      
 
         public async Task<GetLabTestResqV1> GetLabTestById(int id)
         {
@@ -177,68 +220,76 @@ namespace Services.Services
 
         }
 
-        public async Task<GetLabTestResqV1> UpdateLabTestId(int id, CreateLabTestDtoV1 input)
-        {
-            var checkInput = await _context.LabTests.FirstOrDefaultAsync(x => x.Id == id);
-            if (checkInput == null)
-            {
-                throw new Exception("Lab test with this ID does not exist.");
-            }
-            checkInput.AppointmentId = input.AppointmentId;
-            checkInput.TestTypeId = input.TestTypeId;
-            checkInput.OrderTime = input.OrderTime;
-            checkInput.OrderStatus = input.OrderStatus;
-            checkInput.ResultValue = input.ResultValue;
-            checkInput.Unit = input.Unit;
-            checkInput.ReferenceRange = input.ReferenceRange;
-            checkInput.ResultStatus = input.ResultStatus;
-            checkInput.Comments = input.Comments;
-            checkInput.ResultDate = input.ResultDate;
-            checkInput.LabStaffId = input.LabStaffId;
-            _context.SaveChanges();
-            //([status]='success' OR [status]='checked_in' OR [status]='booked') of Appointment table
-            // labtest [orderStatus] ='pending' or 'done'
-            var allTests = await _context.LabTests
-            .Where(x => x.AppointmentId == input.AppointmentId)
-            .ToListAsync();
-            foreach (var item in  allTests)
-            {
-                if(item.OrderStatus == "done")
-                {
-                    var appointment = await _context.Appointments.FirstOrDefaultAsync(a => a.Id == item.AppointmentId);
-                    if (appointment != null)
-                    {
-                        appointment.Status = "success";
-                        _context.Appointments.Update(appointment);
-                        await _context.SaveChangesAsync();
-                    }
-                }
-                if(item.OrderStatus == "pending" || item.OrderStatus == " ")
-                {
-                    var appointment = await _context.Appointments.FirstOrDefaultAsync(a => a.Id == item.AppointmentId);
-                    if (appointment != null)
-                    {
-                        appointment.Status = "checked_in";
-                        _context.Appointments.Update(appointment);
-                        await _context.SaveChangesAsync();
-                    }
-                }
-            }
+       
 
+        public  async Task<List<GetLabTestResqV1>> GetAllLabTestByAppointmentId(int appointmentId)
+        {
+            var labtests = await _context.LabTests
+    .Include(a => a.Appointment)
+        .ThenInclude(a => a.Examination)
+    .Include(a => a.Appointment)
+        .ThenInclude(a => a.Patient)
+    .Include(a => a.TestType).Where(x => x.AppointmentId == appointmentId)
+    .ToListAsync();
+            var labTestResponses = labtests.Select(labTest => new GetLabTestResqV1(
+                )
+            {
+                Id = labTest.Id,
+                AppointmentId = labTest.AppointmentId,
+                TestTypeId = labTest.TestTypeId,
+                OrderTime = labTest.OrderTime,
+                OrderStatus = labTest.OrderStatus,
+                ResultValue = labTest.ResultValue,
+                Unit = labTest.Unit,
+                ReferenceRange = labTest.ReferenceRange,
+                ResultStatus = labTest.ResultStatus,
+                Comments = labTest.Comments,
+                ResultDate = labTest.ResultDate,
+                LabStaffId = labTest.LabStaffId,
+                Date = labTest.Appointment.Date,
+                session = labTest.Appointment.Session,
+                patientId = labTest.Appointment.PatientId,
+                FullName = labTest.Appointment.Patient.FirstName + " " + labTest.Appointment.Patient.LastName,
+                Phone = labTest.Appointment.Patient.Phone,
+                DateOfBirth = labTest.Appointment.Patient.Dob,
+                NameOfTestType = labTest.TestType.Name,
+                UnitOfTestType = labTest.TestType.Unit,
+                ReferenceRangeOfTestType = labTest.TestType.ReferenceRange
+
+
+            }
+            );
+            return labTestResponses.ToList();
+        }
+
+        public async Task<GetLabTestResqV1> UpdateLabTestId(int id, UpdateLabTestDto input)
+        {
+            var getLabtest = await _context.LabTests.Include(a => a.Appointment)
+        .ThenInclude(a => a.Examination)
+    .Include(a => a.Appointment)
+        .ThenInclude(a => a.Patient)
+    .Include(a => a.TestType).FirstOrDefaultAsync(x => x.Id == id);
+            Console.WriteLine($"🟡 Update ID: {id}");
+            Console.WriteLine($"🟡 Value: {input.ResultValue}, Status: {input.ResultStatus}, Comments: {input.Comments}");
+            getLabtest.ResultValue = input.ResultValue;
+            getLabtest.Comments = input.Comments;
+            getLabtest.ResultStatus = input.ResultStatus;
+            _context.Update(getLabtest);
+            _context.SaveChanges();
             var labTestResponse = new GetLabTestResqV1
             {
-                Id = checkInput.Id,
-                AppointmentId = checkInput.AppointmentId,
-                TestTypeId = checkInput.TestTypeId,
-                OrderTime = checkInput.OrderTime,
-                OrderStatus = checkInput.OrderStatus,
-                ResultValue = checkInput.ResultValue,
-                Unit = checkInput.Unit,
-                ReferenceRange = checkInput.ReferenceRange,
-                ResultStatus = checkInput.ResultStatus,
-                Comments = checkInput.Comments,
-                ResultDate = checkInput.ResultDate,
-                LabStaffId = checkInput.LabStaffId
+                Id = getLabtest.Id,
+                AppointmentId = getLabtest.AppointmentId,
+                TestTypeId = getLabtest.TestTypeId,
+                OrderTime = getLabtest.OrderTime,
+                OrderStatus = getLabtest.OrderStatus,
+                ResultValue = getLabtest.ResultValue,
+                Unit = getLabtest.Unit,
+                ReferenceRange = getLabtest.ReferenceRange,
+                ResultStatus = getLabtest.ResultStatus,
+                Comments = getLabtest.Comments,
+                ResultDate = getLabtest.ResultDate,
+                LabStaffId = getLabtest.LabStaffId
             };
             return labTestResponse;
         }

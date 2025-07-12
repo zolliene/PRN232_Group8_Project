@@ -1,0 +1,156 @@
+﻿@page "{id:int}"
+@model FE_RazorPage.Pages.LabTest.LabTestDetailViewModel
+@{
+    ViewData["Title"] = "Chi tiết phiếu xét nghiệm";
+
+}
+@* <form method="post"> *@
+@*     <input type="hidden" name="AppointmentId" value="@Model.LabTests.FirstOrDefault()?.AppointmentId" /> *@
+@*     <table class="min-w-full divide-y divide-gray-200 mb-4"> *@
+@*         <thead class="bg-gray-100"> *@
+@*             <tr> *@
+@*                 <th class="px-4 py-2">Tên Xét Nghiệm</th> *@
+@*                 <th class="px-4 py-2">Đơn Vị</th> *@
+@*                 <th class="px-4 py-2">Ngưỡng</th> *@
+@*                 <th class="px-4 py-2">Giá Trị</th> *@
+@*                 <th class="px-4 py-2">Trạng Thái</th> *@
+@*                 <th class="px-4 py-2">Ghi chú</th> *@
+@*                 <th class="px-4 py-2">Hành động</th> *@
+@*             </tr> *@
+@*         </thead> *@
+@*         <tbody class="bg-white divide-y divide-gray-200"> *@
+@*             @foreach (var test in Model.LabTests) *@
+@*             { *@
+@*                 <tr> *@
+@*                     <td class="px-4 py-2">@test.NameOfTestType</td> *@
+@*                     <td class="px-4 py-2">@test.UnitOfTestType</td> *@
+@*                     <td class="px-4 py-2">@test.ReferenceRangeOfTestType</td> *@
+@*                     <td class="px-4 py-2"> *@
+@*                         <input type="text" name="ResultValue_@test.Id" value="@test.ResultValue" class="border rounded px-2 py-1 w-24" /> *@
+@*                     </td> *@
+@*                     <td class="px-4 py-2"> *@
+@*                         <select name="ResultStatus_@test.Id" class="border rounded px-2 py-1"> *@
+@*                             <option value="normal" selected="@(test.ResultStatus == "normal")">Normal</option> *@
+@*                             <option value="abnormal" selected="@(test.ResultStatus == "abnormal")">Abnormal</option> *@
+@*                         </select> *@
+@*                     </td> *@
+@*                     <td class="px-4 py-2"> *@
+@*                         <textarea name="Comments_@test.Id" class="border rounded px-2 py-1 w-40">@test.Comments</textarea> *@
+@*                     </td> *@
+@*                     <td class="px-4 py-2 flex gap-2"> *@
+@*                         <button name="updateId" value="@test.Id" class="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700">Cập nhật</button> *@
+@*                         <button name="deleteId" value="@test.Id" class="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700" formaction="?handler=Delete" formmethod="post">Xóa</button> *@
+@*                     </td> *@
+@*                 </tr> *@
+@*             } *@
+@*         </tbody> *@
+@*     </table> *@
+@* </form> *@
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 1.5rem;
+    }
+
+    th, td {
+        padding: 12px 15px;
+        border: 1px solid #ccc;
+        text-align: left;
+    }
+
+    th {
+        background-color: #f2f2f2;
+        font-weight: bold;
+    }
+
+    input[type="text"],
+    select,
+    textarea {
+        width: 100%;
+        padding: 6px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-sizing: border-box;
+    }
+
+    textarea {
+        resize: vertical;
+    }
+
+    .btn {
+        padding: 6px 12px;
+        border: none;
+        border-radius: 5px;
+        color: white;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background-color 0.2s ease-in-out;
+    }
+
+    .btn-update {
+        background-color: #007bff;
+    }
+
+        .btn-update:hover {
+            background-color: #0056b3;
+        }
+
+    .btn-delete {
+        background-color: #dc3545;
+    }
+
+        .btn-delete:hover {
+            background-color: #a71d2a;
+        }
+
+    .action-buttons {
+        display: flex;
+        gap: 8px;
+    }
+</style>
+
+<form method="post">
+    <input type="hidden" name="AppointmentId" value="@Model.LabTests.FirstOrDefault()?.AppointmentId" />
+    <table>
+        <thead>
+            <tr>
+                <th>Tên Xét Nghiệm</th>
+                <th>Đơn Vị</th>
+                <th>Ngưỡng</th>
+                <th>Giá Trị</th>
+                <th>Trạng Thái</th>
+                <th>Ghi chú</th>
+                <th>Hành động</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var test in Model.LabTests)
+            {
+                <tr>
+                    <td>@test.NameOfTestType</td>
+                    <td>@test.UnitOfTestType</td>
+                    <td>@test.ReferenceRangeOfTestType</td>
+                    <td>
+                        <input type="text" name="ResultValue_@test.Id" value="@test.ResultValue" />
+                    </td>
+                    <td>
+                        <select name="ResultStatus_@test.Id">
+                            <option value="normal" selected="@(test.ResultStatus == "normal")">Normal</option>
+                            <option value="abnormal" selected="@(test.ResultStatus == "abnormal")">Abnormal</option>
+                        </select>
+                    </td>
+                    <td>
+                        <textarea name="Comments_@test.Id">@test.Comments</textarea>
+                    </td>
+                    <td>
+                        <div class="action-buttons">
+                            <button name="updateId" value="@test.Id" class="btn btn-update">Cập nhật</button>
+                            <button name="deleteId" value="@test.Id" formaction="?handler=Delete" formmethod="post" class="btn btn-delete">Xóa</button>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</form>

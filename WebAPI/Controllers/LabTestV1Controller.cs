@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Services.Dto.request;
 using Services.Dto.response;
 using Services.Interfaces;
 using Services.Services;
@@ -18,12 +19,23 @@ namespace WebAPI.Controllers
         [HttpGet("getAllInADay")]
         public async Task<IActionResult> GetAllInday([FromQuery] DateTime date)
         {
-            var res = await _IlasbTestService.GetAllLabTest(date);
+            var res = await _IlasbTestService.GetAllLabTestByDate(date);
             return Ok(new ApiResponse<Object>
             {
                 Data = res,
                 Status = 200,
                 Message = "Lấy danh sách xét nghiệm thành công"
+            });
+        }
+        [HttpGet("getByAppointmentId")]
+        public async Task<IActionResult> GetbyAppointmentId([FromQuery] int appointmentId)
+        {
+            var res = await _IlasbTestService.GetAllLabTestByAppointmentId(appointmentId);
+            return Ok(new ApiResponse<Object>
+            {
+                Data = res,
+                Status = 200,
+                Message = "Lấy xét nghiệm theo id của lịch hẹn" + appointmentId + " thành công"
             });
         }
         [HttpGet("getById")]
@@ -35,6 +47,17 @@ namespace WebAPI.Controllers
                 Data = res,
                 Status = 200,
                 Message = "lấy xét nghiệm theo id" + id + "thành công"
+            });
+        }
+        [HttpGet("All")]
+        public async Task<IActionResult> GetAllLabTest()
+        {
+            var res = await _IlasbTestService.GetAllLabtest();
+            return Ok(new ApiResponse<Object>
+            {
+                Data = res,
+                Status = 200,
+                Message = "Lấy tất cả xét nghiệm thành công"
             });
         }
         [HttpPost("create")]
@@ -49,9 +72,13 @@ namespace WebAPI.Controllers
             });
         }
         [HttpPut("update")]
-        public async Task<IActionResult> UpdateLabTest([FromQuery] int id, [FromBody] CreateLabTestDtoV1 dto)
+        public async Task<IActionResult> UpdateLabTest([FromQuery] int id, [FromBody] UpdateLabTestDto dto)
         {
+            Console.WriteLine($"🟡 Update ID: {id}");
+            Console.WriteLine($"🟡 Value: {dto.ResultValue}, Status: {dto.ResultStatus}, Comments: {dto.Comments}");
             var res = await _IlasbTestService.UpdateLabTestId(id, dto);
+            Console.WriteLine($"🟡 Update ID: {id}");
+            Console.WriteLine($"🟡 Value: {dto.ResultValue}, Status: {dto.ResultStatus}, Comments: {dto.Comments}");
             return Ok(new ApiResponse<Object>
             {
                 Data = res,
