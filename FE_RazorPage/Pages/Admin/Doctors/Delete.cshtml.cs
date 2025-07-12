@@ -19,21 +19,27 @@ namespace FE_RazorPage.Pages.Admin.Doctors
 
         public async Task<IActionResult> OnGetAsync(int id)
         {
-            var response = await _httpClient.GetAsync($"api/DoctorAccount/{id}");
-
-            if (!response.IsSuccessStatusCode)
+            try
             {
+                var response = await _httpClient.GetAsync($"api/DoctorAccount/{id}");
+
+
+                if (response == null) return NotFound();
+                
+
+                var json = await response.Content.ReadAsStringAsync();
+
+
+                Doctor = JsonSerializer.Deserialize<GetDoctorModel>(json)!;
+
+
+                return Page();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[EXCEPTION] {ex}");
                 return NotFound();
             }
-
-            var json = await response.Content.ReadAsStringAsync();
-
-            using var doc = JsonDocument.Parse(json);
-            var resultJson = doc.RootElement.GetProperty("result").GetRawText();
-
-            Doctor = JsonSerializer.Deserialize<GetDoctorModel>(resultJson)!;
-
-            return Page();
         }
 
         public async Task<IActionResult> OnPostAsync()
@@ -41,6 +47,7 @@ namespace FE_RazorPage.Pages.Admin.Doctors
             var response = await _httpClient.DeleteAsync($"api/DoctorAccount/{Doctor.Id}");
             if (response.IsSuccessStatusCode)
             {
+                TempData["SuccessMessage"] = "Xóa doctor thành công!";
                 return RedirectToPage("Index");
             }
 
@@ -49,4 +56,3 @@ namespace FE_RazorPage.Pages.Admin.Doctors
         }
     }
 }
-

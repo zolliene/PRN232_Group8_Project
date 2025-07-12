@@ -21,24 +21,17 @@ namespace WebAPI.Controllers
             var result = await _crudDoctorService.GetCrudDoctorAccountsAsync();
             return Ok(result);
         }
-
         [HttpGet("{id}")]
         public async Task<IActionResult> GetDoctorById(int id)
         {
+         
             var doctor = await _crudDoctorService.GetCrudDoctorAccountByIdAsync(id);
-
-            if (doctor == null)
-            {
-                return NotFound(new
-                {
-                    StatusCode = 404,
-                    Message = $"Không tìm thấy bác sĩ với ID = {id}",
-                    IsSuccess = false
-                });
-            }
-
+            if (doctor == null) return NotFound("Doctor not found.");
             return Ok(doctor);
+           
+            
         }
+
 
 
         //[HttpPost("create-user")]

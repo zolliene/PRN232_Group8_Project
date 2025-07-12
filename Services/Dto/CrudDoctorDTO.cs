@@ -14,9 +14,9 @@ namespace Services.Dto
         public string Name { get; set; } = null!;
         public string Email { get; set; } = null!;
 
-        public string LicenseNumber { get; set; }
+        public string?LicenseNumber { get; set; }
 
-        public string Qualification { get; set; }
+        public string? Qualification { get; set; }
 
         public DateOnly? DateOfLicense { get; set; }
 

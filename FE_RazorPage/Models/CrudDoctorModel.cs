@@ -32,7 +32,7 @@ namespace FE_RazorPage.Models
     }
     public class UpdateDoctorModel
     {
-        public int Id { get; set; } 
+        public int Id { get; set; }
         public string Name { get; set; } = null!;
         public string Email { get; set; } = null!;
         public string LicenseNumber { get; set; } = null!;
