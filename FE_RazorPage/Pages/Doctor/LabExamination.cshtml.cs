@@ -30,7 +30,7 @@ public class LabExamination : PageModel
 
     [BindProperty] public int AppointmentId { get; set; }
 
-    [BindProperty] public int SelectedTestTypeId { get; set; }
+    [BindProperty] public List<int> SelectedTestTypeIds { get; set; }
 
     [BindProperty]
     [Required(ErrorMessage = "Vui lòng nhập kết quả khám lâm sàng")]
@@ -98,7 +98,7 @@ public class LabExamination : PageModel
             var createLabTestReq = new CreateLabTestReq
             {
                 AppointmentId = AppointmentId,
-                TestTypeId = SelectedTestTypeId,
+                TestTypeId = SelectedTestTypeIds,
                 OrderTime = DateTime.Now
             };
             
