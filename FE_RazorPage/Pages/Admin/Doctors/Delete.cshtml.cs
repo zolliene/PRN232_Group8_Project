@@ -20,12 +20,19 @@ namespace FE_RazorPage.Pages.Admin.Doctors
         public async Task<IActionResult> OnGetAsync(int id)
         {
             var response = await _httpClient.GetAsync($"api/DoctorAccount/{id}");
-            if (!response.IsSuccessStatusCode) return NotFound();
 
-            var doctor = await response.Content.ReadFromJsonAsync<GetDoctorModel>();
-            if (doctor == null) return NotFound();
+            if (!response.IsSuccessStatusCode)
+            {
+                return NotFound();
+            }
 
-            Doctor = doctor;
+            var json = await response.Content.ReadAsStringAsync();
+
+            using var doc = JsonDocument.Parse(json);
+            var resultJson = doc.RootElement.GetProperty("result").GetRawText();
+
+            Doctor = JsonSerializer.Deserialize<GetDoctorModel>(resultJson)!;
+
             return Page();
         }
 

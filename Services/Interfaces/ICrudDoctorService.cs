@@ -11,6 +11,7 @@ namespace Services.Interfaces
     public interface ICrudDoctorService
     {
         Task<List<DoctorDTO>> GetCrudDoctorAccountsAsync();
+        Task<DoctorDTO> GetCrudDoctorAccountByIdAsync(int id);
         Task<bool> CreateDoctorAsync(CreateDoctorDTO dto);
         Task<bool> UpdateDoctorAsync(int userId, UpdateDoctorDTO dto);
         Task<bool> DeleteDoctorAsync(int id);      

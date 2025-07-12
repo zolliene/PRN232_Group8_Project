@@ -22,6 +22,25 @@ namespace WebAPI.Controllers
             return Ok(result);
         }
 
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetDoctorById(int id)
+        {
+            var doctor = await _crudDoctorService.GetCrudDoctorAccountByIdAsync(id);
+
+            if (doctor == null)
+            {
+                return NotFound(new
+                {
+                    StatusCode = 404,
+                    Message = $"Không tìm thấy bác sĩ với ID = {id}",
+                    IsSuccess = false
+                });
+            }
+
+            return Ok(doctor);
+        }
+
+
         //[HttpPost("create-user")]
         //public async Task<IActionResult> CreateUser([FromBody] CreateUserDTO dto)
         //{

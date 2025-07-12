@@ -42,6 +42,37 @@ namespace Services.Services
             return result;
         }
 
+        public async Task<DoctorDTO> GetCrudDoctorAccountByIdAsync(int id)
+        {
+            var doctors = await _unitOfWork.DoctorRepository.GetAllIncludeAsync(d => d.User);
+
+            var doctor = doctors
+                .Where(d => d.Id == id && d.User != null)
+                .Select(d => new DoctorDTO
+                {
+                    Id = d.Id,
+                    Name = d.User.Username,
+                    Email = d.User.Email,
+                    LicenseNumber = d.LicenseNumber,
+                    Qualification = d.Qualification,
+                    DateOfLicense = d.DateOfLicense,
+                    LicenseExpiryDate = d.LicenseExpiryDate,
+                    IsActive = d.User.IsActive
+                })
+                .FirstOrDefault();
+
+            if (doctor == null)
+            {
+                throw new KeyNotFoundException($"Không tìm thấy bác sĩ với ID = {id}");
+            }
+
+            return doctor;
+        }
+
+
+
+
+
         //public async Task<int?> CreateUserAsync(CreateUserDTO dto)
         //{
         //    // Check username trùng
@@ -78,7 +109,7 @@ namespace Services.Services
                 Email = dto.Email,
                 Password = hashed,
                 IsActive = true,
-                Role = "Doctor"
+                Role = "doctor"
             };
 
             await _unitOfWork.UserRepository.AddAsync(user);
@@ -113,8 +144,6 @@ namespace Services.Services
 
             user.Username = dto.Name;
             user.Email = dto.Email;
-
-  
             doctor.LicenseNumber = dto.LicenseNumber;
             doctor.Qualification = dto.Qualification;
             doctor.DateOfLicense = dto.DateOfLicense;
@@ -147,7 +176,6 @@ namespace Services.Services
             return true;
         }
 
-
-
+       
     }
 }

@@ -42,6 +42,8 @@ namespace FE_RazorPage.Pages.Admin.Doctors
 
         public async Task<IActionResult> OnPostAsync()
         {
+            if (!ModelState.IsValid)
+                return Page();
             var response = await _httpClient.PutAsJsonAsync($"api/DoctorAccount/{Doctor.Id}", Doctor);
             if (response.IsSuccessStatusCode)
             {
