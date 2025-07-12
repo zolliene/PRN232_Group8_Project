@@ -428,6 +428,11 @@ public partial class PRN232_Group8Context : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("username");
+            entity.Property(e => e.FullName)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("full_name");
+
         });
 
         OnModelCreatingPartial(modelBuilder);

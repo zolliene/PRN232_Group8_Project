@@ -1,0 +1,186 @@
+﻿@page
+@model FE_RazorPage.Pages.Auth.RegisterModel
+@{
+    ViewData["Title"] = "Đăng ký";
+    ViewData["HideHeader"] = true;
+    Layout = "_Layout";
+  
+}
+
+<div class="container">
+    <div class="form-container">
+        <h2>ĐĂNG KÝ TÀI KHOẢN BỆNH NHÂN</h2>
+        <form method="post">
+            <div class="form-grid">
+                <div>
+                    <label asp-for="Input.Username"></label>
+                    <input asp-for="Input.Username" />
+                    <span asp-validation-for="Input.Username" class="text-danger"></span>
+                </div>
+
+                <div>
+                    <label asp-for="Input.Password"></label>
+                    <input asp-for="Input.Password" type="password" />
+                    <span asp-validation-for="Input.Password" class="text-danger"></span>
+                </div>
+
+                <div>
+                    <label asp-for="Input.Email"></label>
+                    <input asp-for="Input.Email" />
+                    <span asp-validation-for="Input.Email" class="text-danger"></span>
+                </div>
+
+                <div>
+                    <label asp-for="Input.Phone"></label>
+                    <input asp-for="Input.Phone" />
+                    <span asp-validation-for="Input.Phone" class="text-danger"></span>
+                </div>
+
+                <div>
+                    <label asp-for="Input.FirstName"></label>
+                    <input asp-for="Input.FirstName" />
+                    <span asp-validation-for="Input.FirstName" class="text-danger"></span>
+                </div>
+
+                <div>
+                    <label asp-for="Input.LastName"></label>
+                    <input asp-for="Input.LastName" />
+                    <span asp-validation-for="Input.LastName" class="text-danger"></span>
+                </div>
+
+                <div>
+                    <label asp-for="Input.Dob"></label>
+                    <input asp-for="Input.Dob" type="date"
+                           min="1930-01-01"
+                           max="@DateTime.Today.ToString("yyyy-MM-dd")"
+                           oninvalid="this.setCustomValidity('Vui lòng chọn ngày sinh hợp lệ (sau 01/01/1930)')"
+                           oninput="setCustomValidity('')" />
+                    <span asp-validation-for="Input.Dob" class="text-danger"></span>
+
+
+                </div>
+
+                <div>
+                    <label asp-for="Input.Gender"></label>
+                    <select asp-for="Input.Gender" class="form-select">
+                        <option value="">-- Chọn giới tính --</option>
+                        <option value="male">Nam</option>
+                        <option value="female">Nữ</option>
+                    </select>
+                    <span asp-validation-for="Input.Gender" class="text-danger"></span>
+
+                   
+                </div>
+
+                <div>
+                    <label asp-for="Input.Address">Địa chỉ (Không bắt buộc)</label>
+                    <input asp-for="Input.Address" />
+                </div>
+
+                <div>
+                    <label asp-for="Input.InsuranceNumber">Mã BHYT (Không bắt buộc)</label>
+                    <input asp-for="Input.InsuranceNumber" />
+                </div>
+            </div>
+
+            <button type="submit">Đăng ký</button>
+
+            <p class="error">@Model.ErrorMessage</p>
+            <p class="success">@Model.SuccessMessage</p>
+        </form>
+
+        <a class="back" asp-page="/Auth/Login">← Quay lại đăng nhập</a>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+
+<style>
+    .container {
+        display: flex;
+        justify-content: center;
+        margin-top: 50px;
+    }
+
+    .form-container {
+        width: 750px;
+        padding: 30px;
+        border: 1px solid #ddd;
+        border-radius: 12px;
+        box-shadow: 0 0 12px rgba(0,0,0,0.1);
+        background-color: #fff;
+        text-align: center;
+    }
+
+        .form-container h2 {
+            margin-bottom: 20px;
+            color: #007bff;
+        }
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px 20px;
+        margin-bottom: 16px;
+        text-align: left;
+    }
+
+    label {
+        font-weight: 500;
+        display: block;
+        margin-bottom: 4px;
+    }
+
+    input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+    }
+
+    .text-danger {
+        font-size: 12px;
+        color: red;
+        margin-top: 2px;
+        display: block;
+    }
+
+    button {
+        width: 100%;
+        background-color: #007bff;
+        color: white;
+        padding: 10px;
+        border: none;
+        border-radius: 6px;
+        font-weight: bold;
+        margin-top: 12px;
+    }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+    .error {
+        color: red;
+        margin-top: 10px;
+    }
+
+    .success {
+        color: green;
+        margin-top: 10px;
+    }
+
+    .back {
+        display: inline-block;
+        margin-top: 10px;
+        font-size: 14px;
+        color: #007bff;
+        text-decoration: none;
+    }
+
+        .back:hover {
+            text-decoration: underline;
+        }
+</style>

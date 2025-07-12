@@ -123,22 +123,34 @@
         margin-bottom: 0.7rem;
         font-size: 0.5rem;
     }
+
+    .error-box {
+        background-color: #ffe6e6;
+        border: 1px solid #ff4d4d;
+        color: #b30000;
+        padding: 8px 12px;
+        border-radius: 5px;
+        margin-top: 10px;
+        margin-bottom: 20px; 
+        font-size: 0.9rem;
+    }
 </style>
 
 <form method="post" class="login-form-simple">
     <h1 class="login-title">ADV CLINIC</h1>
-    @if (Model.ErrorMessage != null)
+    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
     {
-        <div class="error-message">@Model.ErrorMessage</div>
+        <div class="error-box">@Model.ErrorMessage</div>
     }
+
     <div>
-        <label for="email">Email</label>
+        <label for="email"> Email</label>
         <input asp-for="Input.Email" id="email" placeholder="Email" />
     </div>
     <div>
-        <label for="password">Password</label>
+        <label for="password">Mật khẩu</label>
         <input class="m-4 mt-12" asp-for="Input.Password" id="password" type="password" placeholder="Password" />
     </div>
-    <button type="submit" class="action-btn">Sign In</button>
-    <a class="action-btn register-btn" href="/Register">Register a new account</a>
+    <button type="submit" class="action-btn">Đăng nhập</button>
+    <a class="action-btn register-btn" href="/Auth/Register"  >Đăng ký tài khoản mới</a>
 </form>

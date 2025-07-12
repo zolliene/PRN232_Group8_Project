@@ -1,0 +1,403 @@
+﻿@page
+@using Microsoft.IdentityModel.Tokens
+@model FE_RazorPage.Pages.Doctor.LabResults
+
+@{
+ViewData["Title"] = "Bệnh nhân có kết quả xét nghiệm";
+var appointmentsList = Model.AppointmentsWithLabResults;
+}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<style>
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+    }
+
+    .breadcrumb-nav {
+        color: #1565c0;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .breadcrumb-nav a {
+        color: #1565c0;
+        text-decoration: none;
+        transition: color 0.3s;
+    }
+
+    .breadcrumb-nav a:hover {
+        color: #0d47a1;
+    }
+
+    .back-btn {
+        background-color: #42a5f5;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 25px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .back-btn:hover {
+        background-color: #1e88e5;
+        color: white;
+    }
+
+    .search-section {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        padding: 25px;
+        margin-bottom: 30px;
+    }
+
+    .info-display {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+        padding: 15px 20px;
+        border-radius: 10px;
+        color: #1565c0;
+        font-weight: 500;
+        gap: 10px;
+    }
+
+    .info-display i {
+        font-size: 1.2rem;
+    }
+
+    .lab-results-list-container {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        overflow: hidden;
+        margin-bottom: 30px;
+    }
+
+    .list-header {
+        background-color: #f8f9fa;
+        padding: 20px;
+        border-bottom: 1px solid #e9ecef;
+        font-weight: 600;
+        color: #333;
+    }
+
+    .results-table-container {
+        overflow-x: auto;
+    }
+
+    .results-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.95rem;
+    }
+
+    .results-table th {
+        background: linear-gradient(135deg, #1565c0, #1976d2);
+        color: white;
+        padding: 15px 20px;
+        text-align: left;
+        font-weight: 600;
+        font-size: 0.9rem;
+        border-bottom: 2px solid #0d47a1;
+    }
+
+    .results-table th:last-child {
+        text-align: center;
+    }
+
+    .results-table td {
+        padding: 15px 20px;
+        border-bottom: 1px solid #e9ecef;
+        vertical-align: middle;
+    }
+
+    .result-row {
+        transition: background-color 0.2s;
+    }
+
+    .result-row:hover {
+        background-color: #f8f9fa;
+    }
+
+    .result-row:last-child td {
+        border-bottom: none;
+    }
+
+    .patient-cell {
+        min-width: 250px;
+    }
+
+    .patient-info {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .patient-avatar-table {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #42a5f5, #1e88e5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        font-size: 1rem;
+        flex-shrink: 0;
+    }
+
+    .patient-details {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .patient-name {
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 2px;
+        font-size: 1rem;
+    }
+
+    .patient-phone {
+        font-size: 0.85rem;
+        color: #666;
+    }
+
+    .dob-cell {
+        font-weight: 500;
+        color: #333;
+        min-width: 100px;
+    }
+
+    .gender-cell {
+        font-weight: 500;
+        color: #333;
+        text-align: center;
+        min-width: 80px;
+    }
+
+    .count-cell {
+        text-align: center;
+        min-width: 100px;
+    }
+
+    .result-count-badge {
+        background: linear-gradient(135deg, #28a745, #20c997);
+        color: white;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        display: inline-block;
+        min-width: 30px;
+        text-align: center;
+    }
+
+    .action-cell {
+        text-align: center;
+        min-width: 120px;
+    }
+
+    .view-detail-btn {
+        background-color: #1565c0;
+        color: white;
+        padding: 8px 16px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 0.85rem;
+        transition: all 0.3s;
+        display: inline-block;
+        border: none;
+        cursor: pointer;
+    }
+
+    .view-detail-btn:hover {
+        background-color: #0d47a1;
+        color: white;
+        transform: translateY(-1px);
+        box-shadow: 0 2px 8px rgba(13, 71, 161, 0.3);
+        text-decoration: none;
+    }
+
+    .alert {
+        padding: 12px 16px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        border: 1px solid transparent;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .alert-success {
+        background-color: #d4edda;
+        border-color: #c3e6cb;
+        color: #155724;
+    }
+
+    .alert-danger {
+        background-color: #f8d7da;
+        border-color: #f5c6cb;
+        color: #721c24;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: #666;
+    }
+
+    .empty-state i {
+        font-size: 4rem;
+        margin-bottom: 20px;
+        color: #ccc;
+    }
+
+    .empty-state h3 {
+        margin-bottom: 10px;
+        color: #333;
+    }
+
+    .empty-state p {
+        margin-bottom: 20px;
+        color: #666;
+    }
+</style>
+
+<div class="container">
+    <div class="page-header">
+        <div class="breadcrumb-nav">
+            <a asp-page="/Doctor/PatientList">
+                <i class="fas fa-list"></i> Danh sách bệnh nhân
+            </a>
+            <span>></span>
+            <span><i class="fas fa-flask"></i> Bệnh nhân có kết quả xét nghiệm (3 ngày gần đây)</span>
+        </div>
+        <a asp-page="/Doctor/PatientList" class="back-btn">
+            <i class="fas fa-arrow-left"></i>
+            Quay lại
+        </a>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+    <div class="alert alert-success">
+        <i class="fas fa-check-circle"></i> @TempData["SuccessMessage"]
+    </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+    <div class="alert alert-danger">
+        <i class="fas fa-exclamation-circle"></i> @TempData["ErrorMessage"]
+    </div>
+    }
+
+    <!-- Info Section -->
+    <div class="search-section">
+        <div class="info-display">
+            <i class="fas fa-info-circle"></i>
+            <span>Hiển thị các cuộc hẹn có kết quả xét nghiệm trong 3 ngày gần đây (từ @DateTime.Now.AddDays(-3).ToString("dd/MM/yyyy") đến @DateTime.Now.ToString("dd/MM/yyyy"))</span>
+        </div>
+    </div>
+
+    <div class="lab-results-list-container">
+        <div class="list-header">
+            Danh sách bệnh nhân có kết quả xét nghiệm (@(appointmentsList?.Count ?? 0) cuộc hẹn)
+        </div>
+
+        @if (appointmentsList != null && appointmentsList.Any())
+        {
+        <!-- Results Table -->
+        <div class="results-table-container">
+            <table class="results-table">
+                <thead>
+                <tr>
+                    <th>Bệnh nhân</th>
+                    <th>DOB</th>
+                    <th>Giới tính</th>
+                    <th>Số kết quả</th>
+                    <th>Hành động</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach (var appointment in appointmentsList)
+                {
+                <tr class="result-row">
+                    <td class="patient-cell">
+                        <div class="patient-info">
+                            <div class="patient-avatar-table">
+                                @(appointment.PatientName?.Split(' ').LastOrDefault()?.Substring(0, 1).ToUpper() ?? "?")
+                            </div>
+                            <div class="patient-details">
+                                <div class="patient-name">@appointment.PatientName</div>
+                                <div class="patient-phone">📞 @appointment.PatientPhone</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="dob-cell">@appointment.PatientDob.ToString("dd-MM-yyyy")</td>
+                    <td class="gender-cell">
+                        @(appointment.PatientGender?.ToLower() == "male" ? "Nam" :
+                        appointment.PatientGender?.ToLower() == "female" ? "Nữ" : "Khác")
+                    </td>
+                    <td class="count-cell">
+                        <span class="result-count-badge">@appointment.LabResultCount</span>
+                    </td>
+                    <td class="action-cell">
+                        <a href="/Doctor/PatientLabResults/@appointment.Id" class="view-detail-btn">
+                            Xem chi tiết
+                        </a>
+                    </td>
+                </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+        }
+        else
+        {
+        <div class="empty-state">
+            <i class="fas fa-flask"></i>
+            <h3>Chưa có bệnh nhân nào có kết quả xét nghiệm</h3>
+            <p>Chưa có cuộc hẹn nào có kết quả xét nghiệm trong 3 ngày gần đây.</p>
+        </div>
+        }
+    </div>
+</div>
+
+<script>
+    // Add visual feedback for items
+    document.addEventListener('DOMContentLoaded', function() {
+        // Animation for result rows
+        const resultRows = document.querySelectorAll('.result-row');
+        resultRows.forEach((row, index) => {
+            setTimeout(() => {
+                row.style.opacity = '0';
+                row.style.transform = 'translateY(20px)';
+                row.style.transition = 'all 0.5s ease';
+                setTimeout(() => {
+                    row.style.opacity = '1';
+                    row.style.transform = 'translateY(0)';
+                }, 50);
+            }, index * 50);
+        });
+
+        // Debug info - có thể xóa sau khi test
+        console.log('Page loaded with appointments:', @(appointmentsList?.Count ?? 0));
+    });
+</script>
