@@ -63,8 +63,11 @@ namespace FE_RazorPage.Pages.Login
                         using var doc = JsonDocument.Parse(body);
                         message = doc.RootElement.GetProperty("message").GetString();
                     }
-                    catch { }
-                    ErrorMessage = message ?? "Login failed!";
+                    catch(Exception e) {
+                        Console.WriteLine("Lỗi khi parse JSON từ login API: " + e.Message);
+                        message = "Email hoặc mật khẩu không đúng.";
+                    }
+                    ErrorMessage = message ?? "Đăng nhập thất bại!";
                     return Page();
                 }
             }

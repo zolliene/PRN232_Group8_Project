@@ -31,6 +31,7 @@ builder.Services.AddScoped<IExaminationService, ExaminationService>();
 builder.Services.AddScoped<ITestTypeService, TestTypeService>();
 builder.Services.AddScoped<ILabTestService, LabTestService>();
 builder.Services.AddScoped<IDoctorListService, DoctorListService>();
+builder.Services.AddScoped<IPatientService, PatientService>();
 builder.Services.AddScoped<ITreatmentRegimenService, TreatmentRegimenService>();
 
 builder.Services.AddHttpContextAccessor();
