@@ -123,17 +123,18 @@ public class LabTestService : ILabTestService
     {
         try
         {
-            _logger.LogInformation("Start getting appointments with lab results for recent 3 days");
-            
-            // Lấy appointments có lab results trong 3 ngày gần đây
+            _logger.LogInformation("Start getting appointments with lab results for recent 3 days (excluding completed appointments)");
+        
+            // Lấy appointments có lab results trong 3 ngày gần đây và chưa hoàn thành
             var endDate = DateOnly.FromDateTime(DateTime.Now);
             var startDate = endDate.AddDays(-3);
-            
+        
             var appointments = await _unitOfWork.AppointmentRepository.GetAllAsync(query => query
                 .Include(a => a.Patient)
                 .Include(a => a.LabTests.Where(lt => !string.IsNullOrEmpty(lt.ResultValue)))
                 .Where(a => a.Date >= startDate && a.Date <= endDate)
                 .Where(a => a.LabTests.Any(lt => !string.IsNullOrEmpty(lt.ResultValue))) // Chỉ lấy appointments có lab results
+                .Where(a => a.Status.ToLower() != "success")
                 .OrderByDescending(a => a.Date)
             );
 
@@ -151,6 +152,7 @@ public class LabTestService : ILabTestService
                 LabResultCount = a.LabTests.Count(lt => !string.IsNullOrEmpty(lt.ResultValue))
             }).ToList();
 
+            _logger.LogInformation("Found {} incomplete appointments with lab results", result.Count);
             return result;
         }
         catch (Exception e)
