@@ -9,6 +9,8 @@ builder.Services.AddHttpClient("MyApi", client =>
     client.BaseAddress = new Uri("https://localhost:7022/"); // Thay đổi nếu API khác cổng
 });
 
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

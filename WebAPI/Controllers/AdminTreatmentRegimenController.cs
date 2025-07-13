@@ -6,11 +6,11 @@ namespace WebAPI.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class TreatmentRegimenController : ControllerBase
+    public class AdminTreatmentRegimenController : ControllerBase
     {
         private readonly ITreatmentRegimenService _service;
 
-        public TreatmentRegimenController(ITreatmentRegimenService service)
+        public AdminTreatmentRegimenController(ITreatmentRegimenService service)
         {
             _service = service;
         }
