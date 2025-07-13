@@ -7,15 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Dto\request\**" />
-    <EmbeddedResource Remove="Dto\request\**" />
-    <None Remove="Dto\request\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="13.0.1" />
     <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
+	<PackageReference Include="Microsoft.AspNetCore.Authentication.Abstractions" Version="6.0.0" />
+	<PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.0" />
     <ProjectReference Include="..\Repositories\Repositories.csproj" />
   </ItemGroup>
+
 
 </Project>

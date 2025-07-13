@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Services.Dto
 {
-
+    
     public class TreatmentRegimenDTO
     {
         public int Id { get; set; }

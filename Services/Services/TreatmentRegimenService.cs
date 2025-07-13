@@ -1,20 +1,14 @@
-﻿using System.Security.Claims;
-using AutoMapper;
-using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using PlanyApp.Repository.Base;
 using Repositories.Models;
 using Repositories.UnitOfWork;
-using Services.Dto.request;
 using Services.Dto.response;
 using Services.Dto;
 using Services.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Services.Dto.request;
 
 namespace Services.Services;
 
@@ -47,15 +41,24 @@ public class TreatmentRegimenService : ITreatmentRegimenService
         try
         {
             _logger.LogInformation("Start getting all treatment regimens");
-            
+
             var regimens = await _treatmentRegimenRepository.GetAllAsync(query => query
                 .Include(tr => tr.RegimenDrugs)
                     .ThenInclude(rd => rd.Drug)
                         .ThenInclude(d => d.Group)
             );
 
-            // 🗂️ Lấy danh sách tất cả phác đồ
-        public async Task<List<TreatmentRegimenDTO>> GetAllRegimensAsync()
+            return _mapper.Map<IList<GetTreatmentRegimenRes>>(regimens);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError("Error at get all treatment regimens cause by {}", e.Message);
+            throw;
+        }
+    }
+
+    // 🗂️ Lấy danh sách tất cả phác đồ
+    public async Task<List<TreatmentRegimenDTO>> GetAllRegimensAsync()
     {
         var regimens = await _unitOfWork.TreatmentRegimensMasterRepository.GetAllAsync();
         return regimens.Select(r => new TreatmentRegimenDTO
@@ -66,75 +69,65 @@ public class TreatmentRegimenService : ITreatmentRegimenService
             Description = r.Description
         }).ToList();
     }
-            return _mapper.Map<IList<GetTreatmentRegimenRes>>(regimens);
-        }
-        catch (Exception e)
-        {
-            _logger.LogError("Error at get all treatment regimens cause by {}", e.Message);
-            throw;
-        }
-    }
 
     public async Task CreatePatientRegimen(CreatePatientRegimenReq request)
+{
+    try
     {
-        try
+        _logger.LogInformation("Start creating patient regimen for appointment {}", request.AppointmentId);
+        await _unitOfWork.BeginTransactionAsync();
+
+        // Tìm examination từ appointment
+        var examination = await _examinationRepository.FirstOrDefaultAsync(e => e.AppointmentId == request.AppointmentId);
+        if (examination == null)
+            throw new KeyNotFoundException("Examination not found for this appointment");
+
+        // Kiểm tra xem đã có patient regimen chưa
+        var existingRegimen = await _patientRegimenRepository.FirstOrDefaultAsync(pr => pr.ExaminationId == examination.Id);
+        if (existingRegimen != null)
         {
-            _logger.LogInformation("Start creating patient regimen for appointment {}", request.AppointmentId);
-            await _unitOfWork.BeginTransactionAsync();
-
-            // Tìm examination từ appointment
-            var examination = await _examinationRepository.FirstOrDefaultAsync(e => e.AppointmentId == request.AppointmentId);
-            if (examination == null)
-                throw new KeyNotFoundException("Examination not found for this appointment");
-
-            // Kiểm tra xem đã có patient regimen chưa
-            var existingRegimen = await _patientRegimenRepository.FirstOrDefaultAsync(pr => pr.ExaminationId == examination.Id);
-            if (existingRegimen != null)
-            {
-                // Nếu đã tồn tại, cập nhật thay vì tạo mới
-                existingRegimen.RegimenMasterId = request.RegimenMasterId;
-                existingRegimen.CustomNotes = request.CustomNotes;
-                await _patientRegimenRepository.UpdateAsync(existingRegimen);
-                _logger.LogInformation("Updated existing patient regimen");
-            }
-            else
-            {
-                // Tạo mới nếu chưa tồn tại
-                var patientRegimen = _mapper.Map<PatientRegimen>(request);
-                patientRegimen.ExaminationId = examination.Id;
-                await _patientRegimenRepository.AddAsync(patientRegimen);
-                _logger.LogInformation("Created new patient regimen");
-            }
-
-            // Cập nhật status appointment thành success
-            var appointment = await _appointmentRepository.GetByIdAsync(request.AppointmentId);
-            if (appointment != null)
-            {
-                appointment.Status = "success";
-                await _appointmentRepository.UpdateAsync(appointment);
-            }
-
-            // Xóa phác đồ
-            _unitOfWork.TreatmentRegimensMasterRepository.Remove(regimen);
-            await _unitOfWork.SaveAsync();
-            await _unitOfWork.CommitTransactionAsync();
-            
-            _logger.LogInformation("Patient regimen processed successfully");
+            // Nếu đã tồn tại, cập nhật thay vì tạo mới
+            existingRegimen.RegimenMasterId = request.RegimenMasterId;
+            existingRegimen.CustomNotes = request.CustomNotes;
+            await _patientRegimenRepository.UpdateAsync(existingRegimen);
+            _logger.LogInformation("Updated existing patient regimen");
         }
-        catch (Exception e)
+        else
         {
-            _logger.LogError("Error at create patient regimen cause by {}", e.Message);
-            await _unitOfWork.RollbackTransactionAsync();
-            throw;
+            // Tạo mới nếu chưa tồn tại
+            var patientRegimen = _mapper.Map<PatientRegimen>(request);
+            patientRegimen.ExaminationId = examination.Id;
+            await _patientRegimenRepository.AddAsync(patientRegimen);
+            _logger.LogInformation("Created new patient regimen");
         }
+
+        // Cập nhật status appointment thành success
+        var appointment = await _appointmentRepository.GetByIdAsync(request.AppointmentId);
+        if (appointment != null)
+        {
+            appointment.Status = "success";
+            await _appointmentRepository.UpdateAsync(appointment);
+        }
+
+        await _unitOfWork.SaveAsync();
+        await _unitOfWork.CommitTransactionAsync();
+
+        _logger.LogInformation("Patient regimen processed successfully");
     }
+    catch (Exception e)
+    {
+        _logger.LogError("Error at create patient regimen cause by {}", e.Message);
+        await _unitOfWork.RollbackTransactionAsync();
+        throw;
+    }
+}
 
     public async Task<GetPatientDetail> GetPatientByAppointmentId(int appointmentId)
     {
         try
         {
             _logger.LogInformation("Start get patient by appointment id {}", appointmentId);
-            
+
             var appointment = (await _appointmentRepository.FindIncludeAsync(
                 a => a.Id == appointmentId,
                 a => a.Patient
@@ -145,7 +138,7 @@ public class TreatmentRegimenService : ITreatmentRegimenService
 
             var response = _mapper.Map<GetPatientDetail>(appointment.Patient);
             response.AppointmentId = appointmentId;
-            
+
             return response;
         }
         catch (Exception e)
@@ -153,9 +146,10 @@ public class TreatmentRegimenService : ITreatmentRegimenService
             _logger.LogError("Error at get patient by appointment id cause by {}", e.Message);
             throw;
         }
+    }
 
-         // 📄 Lấy chi tiết 1 phác đồ
-        public async Task<TreatmentRegimenDTO?> GetRegimenByIdAsync(int id)
+    // 📄 Lấy chi tiết 1 phác đồ
+    public async Task<TreatmentRegimenDTO?> GetRegimenByIdAsync(int id)
 {
     var regimen = await _unitOfWork.TreatmentRegimensMasterRepository.GetByIdAsync(id);
     if (regimen == null) return null;
@@ -275,5 +269,3 @@ public async Task<bool> DeleteRegimenDrugAsync(int regimenDrugId)
 
 
     }
-
-}
