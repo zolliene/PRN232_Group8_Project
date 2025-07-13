@@ -20,6 +20,7 @@ public partial class User
     public bool IsActive { get; set; }
 
     public DateTime CreatedAt { get; set; }
+   
     public string? FullName { get; set; }
 
 

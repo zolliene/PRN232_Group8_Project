@@ -6,6 +6,8 @@ namespace FE_RazorPage.Models
     {
         public int Id { get; set; }
         public string Name { get; set; } = null!;
+
+        public string? FullName { get; set; }
         public string Email { get; set; } = null!;
 
         public string LicenseNumber { get; set; }
@@ -22,6 +24,7 @@ namespace FE_RazorPage.Models
     public class CreateDoctorModel
     {
         public string Name { get; set; } = null!;
+        public string? FullName { get; set; }
         [Required]
         [RegularExpression(@"^[\w\.-]+@gmail\.com$", ErrorMessage = "Email phải có định dạng hợp lệ và kết thúc bằng @gmail.com")]
         public string Email { get; set; } = null!;
@@ -34,6 +37,7 @@ namespace FE_RazorPage.Models
     {
         public int Id { get; set; }
         public string Name { get; set; } = null!;
+        public string? FullName { get; set; }
         public string Email { get; set; } = null!;
         public string LicenseNumber { get; set; } = null!;
         public string Qualification { get; set; } = null!;

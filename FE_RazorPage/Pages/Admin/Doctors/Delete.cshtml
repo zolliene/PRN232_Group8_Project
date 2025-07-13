@@ -1,10 +1,68 @@
 ﻿@page "{id:int}"
 @model FE_RazorPage.Pages.Admin.Doctors.DeleteModel
 @{
-ViewData["Title"] = "Xóa bác sĩ";
+    ViewData["Title"] = "Xóa bác sĩ";
 }
 
 <h2>Bạn có chắc chắn muốn xóa bác sĩ?</h2>
+
+<div class="mb-3">
+    <label><strong>Tên bác sĩ:</strong></label>
+    <div>@Model.Doctor.Name</div>
+</div>
+
+@if (!string.IsNullOrEmpty(Model.Doctor.FullName))
+{
+    <div class="mb-3">
+        <label><strong>Họ tên đầy đủ:</strong></label>
+        <div>@Model.Doctor.FullName</div>
+    </div>
+}
+
+<div class="mb-3">
+    <label><strong>Email:</strong></label>
+    <div>@Model.Doctor.Email</div>
+</div>
+
+@if (!string.IsNullOrEmpty(Model.Doctor.Qualification))
+{
+    <div class="mb-3">
+        <label><strong>Chuyên môn:</strong></label>
+        <div>@Model.Doctor.Qualification</div>
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(Model.Doctor.LicenseNumber))
+{
+    <div class="mb-3">
+        <label><strong>Mã giấy phép:</strong></label>
+        <div>@Model.Doctor.LicenseNumber</div>
+    </div>
+}
+
+@if (Model.Doctor.DateOfLicense != null)
+{
+    <div class="mb-3">
+        <label><strong>Ngày cấp phép:</strong></label>
+        <div>@Model.Doctor.DateOfLicense</div>
+    </div>
+}
+
+@if (Model.Doctor.LicenseExpiryDate != null)
+{
+    <div class="mb-3">
+        <label><strong>Ngày hết hạn:</strong></label>
+        <div>@Model.Doctor.LicenseExpiryDate</div>
+    </div>
+}
+
+@if (Model.Doctor.IsActive != null)
+{
+    <div class="mb-3">
+        <label><strong>Trạng thái hoạt động:</strong></label>
+        <div>@(Model.Doctor.IsActive == true ? "Đang hoạt động" : "Ngừng hoạt động")</div>
+    </div>
+}
 
 <form method="post">
     <button type="submit" class="btn btn-danger">Xác nhận xóa</button>

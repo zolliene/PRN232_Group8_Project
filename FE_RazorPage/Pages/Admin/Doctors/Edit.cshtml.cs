@@ -41,6 +41,7 @@ namespace FE_RazorPage.Pages.Admin.Doctors
             Doctor = new UpdateDoctorModel
             {
                 Id = doctorData.Id,
+                FullName = doctorData.FullName, 
                 Name = doctorData.Name,
                 Email = doctorData.Email,
                 LicenseNumber = doctorData.LicenseNumber,
