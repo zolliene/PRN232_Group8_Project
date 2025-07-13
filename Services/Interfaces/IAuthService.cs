@@ -1,4 +1,5 @@
-﻿using Services.Services;
+﻿using Services.Dto.request;
+using Services.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,5 +11,6 @@ namespace Services.Interfaces
     public interface IAuthService
     {
         AuthResult? Authenticate(string email, string password);
+        Task RegisterPatient(RegisterPatientReq request);
     }
 }

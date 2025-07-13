@@ -1,9 +1,19 @@
-﻿var builder = WebApplication.CreateBuilder(args);
+﻿using System.Text.Json;
+
+var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddSession();
+builder.Services.AddHttpClient("BackendApi", client =>
+{
+    client.BaseAddress = new Uri("https://localhost:7022/api/");
+});
 
+builder.Services.AddSingleton(new JsonSerializerOptions
+{
+    PropertyNameCaseInsensitive = true
+});
 builder.Services.AddHttpClient("MyApi", client =>
 {
     client.BaseAddress = new Uri("https://localhost:7022/"); // Thay đổi nếu API khác cổng

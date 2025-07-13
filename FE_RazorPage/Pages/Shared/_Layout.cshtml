@@ -9,25 +9,27 @@
 
                 },
         ["staff"] = new List<(string, string)> {
-                ("Test pending", "/Index"),
-                ("Edit Result", "/Index")
+                ("Test pending", "/LabTest/Index"),
+                ("Edit Result", "/Index"),
+                
                 },
         ["guest"] = new List<(string, string)> {
-                ("HomePage", "/Index"),
-               
-                ("Appointment", "/Index")
-                 },
+                ("Trang chủ", "/Index"),
+                ("Đặt lịch", "/Appointment/CreateAppointment"),
+                                },
         ["patient"] = new List<(string, string)> {
-                ("HomePage", "/Index"),
-                ("Appointment", "/Index"),
-                ("MedicalHistory", "/Index")
+                ("Trang Chủ", "/Index"),
+                ("Đặt lịch", "/Appointment/CreateAppointment"),
+                ("Lịch sử khám", "/Appointment/History"),
+                ("Thông tin cá nhân", "/Patient/Profile")
                 },
         ["doctor"] = new List<(string, string)> {
-                ("Patient List", "/Index"),
-                ("Lab Result", "/Index")
+                ("Patient List", "/Doctor/PatientList"),
+                // ("Lab Result", "/Index")
+                ("Lab Result", "/Doctor/LabResults")
                 },
         ["receptionist"] = new List<(string, string)> {
-                ("Check In List", "/Index"),
+                ("Check In List", "/Receptionist/CheckInList"),
               
                 }
     };
@@ -42,9 +44,11 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/FE_RazorPage.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
+
 </head>
 <body>
-
+    @if (!(ViewData["HideHeader"] as bool? ?? false)){
     <header>
         <style>
             .custom-btn {
@@ -123,7 +127,7 @@
                         @foreach (var item in menuItems)
                         {
                             <li class="nav-item mx-1">
-                                <a class="nav-link text-dark fs-4" href="@item.Path">@item.Label</a>
+                                <a class="nav-link text-dark fs-4" asp-page="@item.Path">@item.Label</a>
                             </li>
                         }
                     </ul>
@@ -142,6 +146,7 @@
             </div>
         </nav>
     </header>
+    }
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
@@ -159,5 +164,6 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
 
     @await RenderSectionAsync("Scripts", required: false)
+    
 </body>
 </html>

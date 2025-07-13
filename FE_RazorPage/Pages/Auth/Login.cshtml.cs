@@ -40,7 +40,7 @@ namespace FE_RazorPage.Pages.Login
                     using var doc = JsonDocument.Parse(body);
                     var root = doc.RootElement;
 
-                    var dataElement = root.GetProperty("data");
+                    var dataElement = root.GetProperty("Data");
                     var token = dataElement.GetProperty("token").GetString();
                     var id = dataElement.GetProperty("id").GetInt32();
                     var role = dataElement.GetProperty("role").GetString();
@@ -49,6 +49,7 @@ namespace FE_RazorPage.Pages.Login
                     HttpContext.Session.SetString("jwtToken", token ?? "");
                     HttpContext.Session.SetInt32("userId", id);
                     HttpContext.Session.SetString("role", role ?? "guest");
+                    
 
                     // Chuyển về trang Home hoặc Dashboard
                     return RedirectToPage("/Index");
@@ -62,8 +63,11 @@ namespace FE_RazorPage.Pages.Login
                         using var doc = JsonDocument.Parse(body);
                         message = doc.RootElement.GetProperty("message").GetString();
                     }
-                    catch { }
-                    ErrorMessage = message ?? "Login failed!";
+                    catch(Exception e) {
+                        Console.WriteLine("Lỗi khi parse JSON từ login API: " + e.Message);
+                        message = "Email hoặc mật khẩu không đúng.";
+                    }
+                    ErrorMessage = message ?? "Đăng nhập thất bại!";
                     return Page();
                 }
             }

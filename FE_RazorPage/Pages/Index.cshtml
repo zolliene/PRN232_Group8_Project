@@ -6,6 +6,8 @@
     ViewData["Title"] = "ADV Clinic – Chăm sóc sức khỏe HIV toàn diện";
 }
 
+
+
 <style>
     body {
         font-family: 'Segoe UI', sans-serif;
@@ -112,11 +114,44 @@
         text-align: center;
         padding: 20px;
     }
+
+    .book-appointment {
+        color: #1e3a8a;
+        font-size: 1.2rem;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        transition: color 0.3s, font-weight 0.3s;
+    }
+
+        .book-appointment i {
+            margin-left: 6px;
+            transition: transform 0.3s;
+        }
+
+        .book-appointment:hover {
+            color: #0d47a1;
+            font-weight: 700;
+        }
+
+            .book-appointment:hover i {
+                transform: translateX(4px);
+            }
 </style>
 
 <div class="hero">
     <h1>ADV Clinic</h1>
     <p>Phòng khám chuyên điều trị và chăm sóc bệnh nhân HIV với đội ngũ y bác sĩ tận tâm và chuyên nghiệp.</p>
+   
+    <div class="mt-4">
+        <a href="/Appointment/CreateAppointment"
+           class="book-appointment">
+            Đặt lịch ngay <i class="fas fa-arrow-right"></i>
+        </a>
+    </div>
+
+
 </div>
 
 <div class="section">
