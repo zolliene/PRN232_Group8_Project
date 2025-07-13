@@ -30,6 +30,7 @@ namespace Services.Services
                 {
                     Id = d.Id, 
                     Name = d.User.Username,
+                    FullName = d.User.FullName,
                     Email = d.User.Email,
                     LicenseNumber = d.LicenseNumber,
                     Qualification = d.Qualification,
@@ -52,6 +53,7 @@ namespace Services.Services
                 {
                     Id = d.Id,
                     Name = d.User.Username,
+                    FullName = d.User.FullName,
                     Email = d.User.Email,
                     LicenseNumber = d.LicenseNumber,
                     Qualification = d.Qualification,
@@ -106,6 +108,7 @@ namespace Services.Services
             var user = new User
             {
                 Username = dto.Name,
+                FullName = dto.FullName,
                 Email = dto.Email,
                 Password = hashed,
                 IsActive = true,
@@ -144,6 +147,7 @@ namespace Services.Services
 
             user.Username = dto.Name;
             user.Email = dto.Email;
+            user.FullName = dto.FullName;
             doctor.LicenseNumber = dto.LicenseNumber;
             doctor.Qualification = dto.Qualification;
             doctor.DateOfLicense = dto.DateOfLicense;
