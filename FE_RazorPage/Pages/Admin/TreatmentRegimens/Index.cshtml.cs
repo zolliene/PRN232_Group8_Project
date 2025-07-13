@@ -18,7 +18,7 @@ namespace FE_RazorPage.Pages.Admin.TreatmentRegimens
 
         public async Task OnGetAsync()
         {
-            Regimens = await _httpClient.GetFromJsonAsync<List<GetTreatmentRegimenModel>>("api/treatmentregimen") ?? new();
+            Regimens = await _httpClient.GetFromJsonAsync<List<GetTreatmentRegimenModel>>("api/admintreatmentregimen") ?? new();
         }
     }
 

@@ -18,7 +18,7 @@ namespace FE_RazorPage.Pages.Admin.TreatmentRegimens
 
         public async Task<IActionResult> OnGetAsync(int id)
         {
-            var result = await _httpClient.GetFromJsonAsync<GetTreatmentRegimenModel>($"api/TreatmentRegimen/{id}");
+            var result = await _httpClient.GetFromJsonAsync<GetTreatmentRegimenModel>($"api/adminTreatmentRegimen/{id}");
             if (result == null) return NotFound();
 
             Regimen = result;
@@ -27,7 +27,7 @@ namespace FE_RazorPage.Pages.Admin.TreatmentRegimens
 
         public async Task<IActionResult> OnPostAsync()
         {
-            var response = await _httpClient.DeleteAsync($"api/TreatmentRegimen/{Regimen.Id}");
+            var response = await _httpClient.DeleteAsync($"api/adminTreatmentRegimen/{Regimen.Id}");
 
             if (response.IsSuccessStatusCode)
             {

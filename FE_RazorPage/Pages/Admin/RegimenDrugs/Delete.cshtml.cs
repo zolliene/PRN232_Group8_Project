@@ -30,7 +30,7 @@ namespace FE_RazorPage.Pages.Admin.RegimenDrugs
 
         public async Task<IActionResult> OnPostAsync()
         {
-            var response = await _httpClient.DeleteAsync($"api/TreatmentRegimen/drugs/{Id}");
+            var response = await _httpClient.DeleteAsync($"api/adminTreatmentRegimen/drugs/{Id}");
             if (response.IsSuccessStatusCode)
             {
                 TempData["SuccessMessage"] = "🗑️ Đã xoá thuốc khỏi phác đồ!";

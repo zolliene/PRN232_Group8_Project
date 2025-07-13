@@ -18,7 +18,7 @@ namespace FE_RazorPage.Pages.Admin.TreatmentRegimens
 
         public async Task<IActionResult> OnGetAsync(int id)
         {
-            var result = await _httpClient.GetFromJsonAsync<GetTreatmentRegimenModel>($"api/TreatmentRegimen/{id}");
+            var result = await _httpClient.GetFromJsonAsync<GetTreatmentRegimenModel>($"api/adminTreatmentRegimen/{id}");
             if (result == null) return NotFound();
 
             Regimen = new UpdateTreatmentRegimenModel
@@ -37,7 +37,7 @@ namespace FE_RazorPage.Pages.Admin.TreatmentRegimens
             if (!ModelState.IsValid)
                 return Page();
 
-            var response = await _httpClient.PutAsJsonAsync($"api/TreatmentRegimen/{Regimen.Id}", Regimen);
+            var response = await _httpClient.PutAsJsonAsync($"api/adminTreatmentRegimen/{Regimen.Id}", Regimen);
 
             if (response.IsSuccessStatusCode)
             {

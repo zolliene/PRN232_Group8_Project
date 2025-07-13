@@ -41,7 +41,7 @@ namespace FE_RazorPage.Pages.Admin.RegimenDrugs
 
         public async Task<IActionResult> OnPostAsync()
         {
-            var response = await _httpClient.PutAsJsonAsync($"api/TreatmentRegimen/drugs/{Drug.Id}", Drug);
+            var response = await _httpClient.PutAsJsonAsync($"api/adminTreatmentRegimen/drugs/{Drug.Id}", Drug);
             if (response.IsSuccessStatusCode)
             {
                 TempData["SuccessMessage"] = "✅ Cập nhật thuốc thành công!";

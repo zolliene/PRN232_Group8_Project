@@ -35,7 +35,7 @@ namespace FE_RazorPage.Pages.Admin.RegimenDrugs
                 return Page();
             }
 
-            var response = await _httpClient.PostAsJsonAsync($"api/TreatmentRegimen/{RegimenId}/drugs", NewDrug);
+            var response = await _httpClient.PostAsJsonAsync($"api/adminTreatmentRegimen/{RegimenId}/drugs", NewDrug);
             if (response.IsSuccessStatusCode)
             {
                 TempData["SuccessMessage"] = "✅ Thêm thuốc vào phác đồ thành công!";

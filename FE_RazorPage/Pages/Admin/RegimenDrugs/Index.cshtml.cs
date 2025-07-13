@@ -20,7 +20,7 @@ namespace FE_RazorPage.Pages.Admin.RegimenDrugs
 
         public async Task<IActionResult> OnGetAsync()
         {
-            var result = await _httpClient.GetFromJsonAsync<List<GetRegimenDrugModel>>($"api/TreatmentRegimen/{RegimenId}/drugs");
+            var result = await _httpClient.GetFromJsonAsync<List<GetRegimenDrugModel>>($"api/adminTreatmentRegimen/{RegimenId}/drugs");
             RegimenDrugs = result ?? new();
             return Page();
         }

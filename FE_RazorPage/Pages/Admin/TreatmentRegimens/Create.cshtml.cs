@@ -21,7 +21,7 @@ namespace FE_RazorPage.Pages.Admin.TreatmentRegimens
             if (!ModelState.IsValid)
                 return Page();
 
-            var response = await _httpClient.PostAsJsonAsync("api/TreatmentRegimen", Regimen);
+            var response = await _httpClient.PostAsJsonAsync("api/adminTreatmentRegimen", Regimen);
 
             if (response.IsSuccessStatusCode)
             {
